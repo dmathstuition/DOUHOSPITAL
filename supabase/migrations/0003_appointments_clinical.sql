@@ -214,11 +214,13 @@ create table if not exists public.waiting_queue (
 );
 create index if not exists idx_queue_status on public.waiting_queue (status, checked_in_at);
 -- One queue entry per number per day. `checked_in_at::date` is only STABLE
--- (timezone-dependent), which Postgres forbids in an index expression, so we
--- anchor to a fixed zone (UTC) to make the expression IMMUTABLE. This matches
--- how the app derives "today" (ISO/UTC dates) and the daily queue-number reset.
+-- (timezone-dependent), which Postgres forbids in an index expression. Even
+-- `AT TIME ZONE 'UTC'` (a text zone) is STABLE because tz names can change.
+-- The INTERVAL form `AT TIME ZONE INTERVAL '0'` uses a fixed 0 (UTC) offset and
+-- IS IMMUTABLE. This matches how the app derives "today" (UTC dates) and the
+-- daily queue-number reset.
 create unique index if not exists uq_queue_number_day
-  on public.waiting_queue (queue_number, ((checked_in_at at time zone 'UTC')::date));
+  on public.waiting_queue (queue_number, ((checked_in_at at time zone interval '0')::date));
 
 -- ---------------------------------------------------------------------------
 -- emergency_contacts & medical_alerts
