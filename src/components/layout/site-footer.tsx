@@ -30,6 +30,7 @@ export function SiteFooter() {
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li><Link href="/privacy" className="hover:text-foreground">Privacy Notice</Link></li>
             <li><Link href="/terms" className="hover:text-foreground">Terms of Use</Link></li>
+            <li><Link href="/register" className="hover:text-foreground">Patient Registration</Link></li>
             <li><Link href="/login" className="hover:text-foreground">Staff Login</Link></li>
           </ul>
         </div>

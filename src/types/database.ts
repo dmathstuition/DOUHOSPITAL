@@ -247,6 +247,33 @@ export type SystemSettingRow = {
   updated_at: string;
 };
 
+export type RegistrationRequestRow = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  middle_name: string | null;
+  sex: 'male' | 'female' | null;
+  date_of_birth: string | null;
+  blood_group: string | null;
+  genotype: string | null;
+  email: string | null;
+  phone: string | null;
+  matric_number: string | null;
+  student_id: string | null;
+  faculty: string | null;
+  department: string | null;
+  level: string | null;
+  address: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  note: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+  patient_id: string | null;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+};
+
 export type SmsCampaignRecipientRow = {
   id: string;
   campaign_id: string;
@@ -337,6 +364,7 @@ export type Database = {
       audit_logs: TableShape<AuditLogRow>;
       sms_campaigns: TableShape<SmsCampaignRow>;
       sms_campaign_recipients: TableShape<SmsCampaignRecipientRow>;
+      registration_requests: TableShape<RegistrationRequestRow>;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

@@ -30,6 +30,9 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-2 md:flex">
           <Button asChild size="sm">
+            <Link href="/register">Register</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
             <Link href="/login">Staff Login</Link>
           </Button>
         </div>
@@ -61,8 +64,11 @@ export function SiteHeader() {
               {item.title}
             </Link>
           ))}
-          <div className="mt-2">
-            <Button asChild size="sm" className="w-full">
+          <div className="mt-2 flex gap-2">
+            <Button asChild size="sm" className="flex-1">
+              <Link href="/register">Register</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm" className="flex-1">
               <Link href="/login">Staff Login</Link>
             </Button>
           </div>

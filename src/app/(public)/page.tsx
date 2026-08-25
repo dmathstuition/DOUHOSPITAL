@@ -9,6 +9,7 @@ import {
   Mail,
   Siren,
   UserRound,
+  UserRoundPlus,
   ArrowRight,
   type LucideIcon,
 } from 'lucide-react';
@@ -51,8 +52,8 @@ export default async function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
-                <Link href="/services">
-                  <Stethoscope /> Our Services
+                <Link href="/register">
+                  <UserRoundPlus /> Register as a Patient
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
@@ -62,7 +63,8 @@ export default async function HomePage() {
               </Button>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              Visit the health center to register — our staff will attend to you.
+              Submit a registration request online — our staff will complete your
+              registration at the health center.
             </p>
           </div>
 
