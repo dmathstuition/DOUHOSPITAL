@@ -32,11 +32,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Requires Pages to be enabled with Source = "GitHub Actions"
+      # (repo Settings → Pages). See docs/deployment.md.
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          # Attempt to switch the Pages source to GitHub Actions automatically.
-          enablement: true
 
       - name: Upload static site artifact
         uses: actions/upload-pages-artifact@v3
