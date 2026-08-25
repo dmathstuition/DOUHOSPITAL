@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dennis Osadebay University Health Center (DOUHC)</title>
+    <meta
+      name="description"
+      content="Dennis Osadebay University Health Center (DOUHC) — quality healthcare for the university community. Appointments, laboratory, pharmacy and more."
+    />
+    <!--
+      ============================================================
+      STATIC PREVIEW of the DOUHC public site (for GitHub Pages).
+      The full application (patient portal + staff dashboard) is a
+      server-rendered Next.js app and runs on Vercel, not here.
+
+      >>> PASTE YOUR DEPLOYED APP URL BELOW so the buttons work: <<<
+      e.g.  const APP_URL = "https://douhc.vercel.app";
+      ============================================================
+    -->
+    <script>
+      const APP_URL = ""; // ← set to your Vercel URL
+    </script>
+    <style>
+      :root {
+        --green: #1c5c40;
+        --green-dark: #164a33;
+        --green-soft: #e8f2ec;
+        --ink: #16241c;
+        --muted: #5b6b62;
+        --border: #d8e4dd;
+        --bg: #ffffff;
+        --bg-soft: #f4f8f6;
+        --warn: #b45309;
+        --radius: 14px;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        line-height: 1.55;
+      }
+      a { color: inherit; text-decoration: none; }
+      .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 15px;
+        border: 1px solid transparent; cursor: pointer;
+      }
+      .btn-primary { background: var(--green); color: #fff; }
+      .btn-primary:hover { background: var(--green-dark); }
+      .btn-outline { border-color: var(--border); background: #fff; color: var(--ink); }
+      .btn-outline:hover { background: var(--bg-soft); }
+
+      /* Preview banner */
+      .banner {
+        background: #fff7ed; color: var(--warn); border-bottom: 1px solid #fed7aa;
+        font-size: 13px; text-align: center; padding: 8px 16px;
+      }
+      .banner a { text-decoration: underline; font-weight: 600; }
+
+      /* Header */
+      header.site {
+        position: sticky; top: 0; z-index: 20;
+        background: rgba(255,255,255,.92); backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+      .brand { display: flex; align-items: center; gap: 12px; }
+      .logo {
+        width: 42px; height: 42px; border-radius: 10px; background: var(--green);
+        color: #fff; font-weight: 800; display: grid; place-items: center; font-size: 15px;
+      }
+      .brand small { color: var(--muted); font-size: 11px; display: block; }
+      .brand b { color: var(--green); font-size: 16px; }
+      .nav-links { display: none; gap: 6px; }
+      .nav-links a { padding: 8px 12px; border-radius: 8px; color: var(--muted); font-weight: 500; font-size: 14px; }
+      .nav-links a:hover { background: var(--green-soft); color: var(--ink); }
+      .nav-cta { display: flex; gap: 8px; }
+      @media (min-width: 860px) { .nav-links { display: flex; } }
+
+      /* Hero */
+      .hero { background: linear-gradient(160deg, var(--green-soft), #fff 60%); border-bottom: 1px solid var(--border); }
+      .hero-grid { display: grid; gap: 36px; padding: 64px 0; align-items: center; }
+      @media (min-width: 900px) { .hero-grid { grid-template-columns: 1.1fr .9fr; } }
+      .pill { display: inline-block; background: var(--green-soft); color: var(--green-dark);
+        border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 600; }
+      .hero h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.1; margin: 14px 0 10px; letter-spacing: -.5px; }
+      .hero p.lead { font-size: 18px; color: var(--muted); max-width: 40ch; }
+      .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+      .hero-card {
+        aspect-ratio: 4/3; border-radius: 20px; border: 1px solid var(--border);
+        background: radial-gradient(circle at 30% 30%, rgba(28,92,64,.16), transparent 60%), var(--green-soft);
+        display: grid; place-items: center; text-align: center; color: var(--muted); padding: 24px;
+      }
+      .hero-card .logo { width: 60px; height: 60px; font-size: 20px; margin-bottom: 12px; }
+
+      section { padding: 64px 0; }
+      section.alt { background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+      .section-head { text-align: center; margin-bottom: 36px; }
+      .section-head h2 { font-size: 28px; margin: 0 0 8px; letter-spacing: -.3px; }
+      .section-head p { color: var(--muted); margin: 0; }
+
+      .grid { display: grid; gap: 16px; }
+      .cols-2 { grid-template-columns: 1fr; }
+      .cols-3 { grid-template-columns: 1fr; }
+      .cols-4 { grid-template-columns: 1fr 1fr; }
+      @media (min-width: 680px) { .cols-3 { grid-template-columns: 1fr 1fr; } .cols-2 { grid-template-columns: 1fr 1fr; } }
+      @media (min-width: 960px) { .cols-3 { grid-template-columns: repeat(3,1fr); } .cols-4 { grid-template-columns: repeat(4,1fr); } }
+
+      .card { border: 1px solid var(--border); border-radius: var(--radius); background: #fff; padding: 22px; }
+      .card:hover { box-shadow: 0 6px 24px rgba(22,74,51,.07); }
+      .ico { width: 44px; height: 44px; border-radius: 10px; background: var(--green-soft); color: var(--green);
+        display: grid; place-items: center; margin-bottom: 14px; }
+      .ico svg { width: 22px; height: 22px; }
+      .card h3 { margin: 0 0 4px; font-size: 16px; }
+      .card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+      .row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+      .row:last-child { border-bottom: 0; }
+      .row .m { color: var(--muted); }
+      .contact-emerg { color: #b91c1c; font-weight: 600; }
+
+      footer.site { background: var(--bg-soft); border-top: 1px solid var(--border); padding: 40px 0; color: var(--muted); font-size: 14px; }
+      .foot-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+      @media (min-width: 760px) { .foot-grid { grid-template-columns: 2fr 1fr 1fr; } }
+      .foot-bottom { border-top: 1px solid var(--border); margin-top: 28px; padding-top: 16px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      Static preview of the public site. The full patient portal &amp; staff dashboard run on the deployed app —
+      <a href="https://github.com/dmathstuition/DOUHOSPITAL/blob/main/docs/deployment.md">see deployment guide</a>.
+    </div>
+
+    <header class="site">
+      <div class="container nav">
+        <a class="brand" href="#top">
+          <span class="logo">DH</span>
+          <span><b>DOUHC</b><small>Dennis Osadebay University Health Center</small></span>
+        </a>
+        <nav class="nav-links">
+          <a href="#services">Services</a>
+          <a href="#departments">Departments</a>
+          <a href="#hours">Hours</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <div class="nav-cta">
+          <a class="btn btn-outline app-link" data-path="/login" href="#">Login</a>
+          <a class="btn btn-primary app-link" data-path="/appointments" href="#">Book</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <span class="pill">University Health Center</span>
+            <h1>Dennis Osadebay University Health Center</h1>
+            <p class="lead">Quality Healthcare for the Dennis Osadebay University Community.</p>
+            <div class="hero-cta">
+              <a class="btn btn-primary app-link" data-path="/appointments" href="#">Book Appointment</a>
+              <a class="btn btn-outline app-link" data-path="/login" href="#">Student / Patient Login</a>
+            </div>
+          </div>
+          <div class="hero-card">
+            <div>
+              <div class="logo">DH</div>
+              <p>Health Center hero image<br /><small>/public/images/health-center-hero.jpg</small></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="services" class="alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>Our Services</h2>
+            <p>Comprehensive healthcare for the university community</p>
+          </div>
+          <div class="grid cols-3" id="services-grid"></div>
+        </div>
+      </section>
+
+      <section id="departments">
+        <div class="container">
+          <div class="section-head">
+            <h2>Departments</h2>
+            <p>Specialised units within DOUHC</p>
+          </div>
+          <div class="grid cols-4" id="dept-grid"></div>
+        </div>
+      </section>
+
+      <section id="hours" class="alt">
+        <div class="container">
+          <div class="grid cols-2">
+            <div class="card">
+              <h3>Opening Hours</h3>
+              <div id="hours-list" style="margin-top:12px"></div>
+            </div>
+            <div class="card" id="contact">
+              <h3>Contact</h3>
+              <div style="margin-top:12px">
+                <div class="row"><span class="m">Address</span><span>Dennis Osadebay University, Asaba, Delta State</span></div>
+                <div class="row"><span class="m">Phone</span><span>+234 800 000 0000</span></div>
+                <div class="row"><span class="m">Email</span><span>healthcenter@dou.edu.ng</span></div>
+                <div class="row"><span class="m">Emergency</span><span class="contact-emerg">+234 800 000 0911</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site">
+      <div class="container">
+        <div class="foot-grid">
+          <div>
+            <div class="brand" style="margin-bottom:10px">
+              <span class="logo">DH</span>
+              <span><b>DOUHC</b><small>Dennis Osadebay University Health Center</small></span>
+            </div>
+            <p style="max-width:34ch">Quality Healthcare for the Dennis Osadebay University Community.</p>
+          </div>
+          <div>
+            <strong style="color:var(--ink)">Explore</strong>
+            <p style="margin:.5rem 0 0"><a href="#services">Services</a></p>
+            <p style="margin:.35rem 0 0"><a href="#departments">Departments</a></p>
+            <p style="margin:.35rem 0 0"><a href="#hours">Hours</a></p>
+          </div>
+          <div>
+            <strong style="color:var(--ink)">Application</strong>
+            <p style="margin:.5rem 0 0"><a class="app-link" data-path="/login" href="#">Staff / Patient Login</a></p>
+            <p style="margin:.35rem 0 0"><a class="app-link" data-path="/register" href="#">Register</a></p>
+            <p style="margin:.35rem 0 0"><a href="https://github.com/dmathstuition/DOUHOSPITAL">Source &amp; docs</a></p>
+          </div>
+        </div>
+        <div class="foot-bottom">
+          <span>© <span id="year"></span> Dennis Osadebay University Health Center. All rights reserved.</span>
+          <span>DOUHC — Static preview</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // ---- content ----
+      const services = [
+        ["Stethoscope", "General Outpatient", "Routine consultations, diagnosis and treatment for common conditions."],
+        ["Flask", "Laboratory", "Diagnostic testing with secure digital results delivery."],
+        ["Pill", "Pharmacy", "On-site dispensing of prescribed medications and refills."],
+        ["Smile", "Dental", "Oral health checks, cleaning and dental treatment."],
+        ["Baby", "Antenatal", "Maternal care and antenatal monitoring for expectant mothers."],
+        ["Heart", "Health Screening", "Preventive screening and periodic wellness checks."],
+        ["Cross", "Emergency Care", "Prompt response to urgent and emergency medical situations."],
+      ];
+      const departments = ["General Outpatient","Laboratory","Pharmacy","Dental","Antenatal","Emergency","Health Screening"];
+      const hours = [["Monday – Friday","08:00 – 18:00"],["Saturday","09:00 – 14:00"],["Sunday","Emergency only"]];
+
+      const ICONS = {
+        Stethoscope: '<path d="M6 3v5a4 4 0 0 0 8 0V3M6 3H4m2 0h2m4 0h2m-2 0h-2m2 12a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-3"/><circle cx="20" cy="10" r="2"/>',
+        Flask: '<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/>',
+        Pill: '<path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7Z"/><path d="m8.5 8.5 7 7"/>',
+        Smile: '<circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>',
+        Baby: '<path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5M12 3a9 9 0 0 0 0 18 9 9 0 0 0 0-18Z"/>',
+        Heart: '<path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>',
+        Cross: '<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',
+      };
+
+      const sg = document.getElementById("services-grid");
+      services.forEach(([icon, title, desc]) => {
+        sg.insertAdjacentHTML("beforeend",
+          `<div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[icon]}</svg></div><h3>${title}</h3><p>${desc}</p></div>`);
+      });
+
+      const dg = document.getElementById("dept-grid");
+      departments.forEach((d) => dg.insertAdjacentHTML("beforeend", `<div class="card"><h3>${d}</h3><p><a class="app-link" data-path="/departments" href="#" style="color:var(--green);font-weight:600">Learn more →</a></p></div>`));
+
+      const hl = document.getElementById("hours-list");
+      hours.forEach(([d, h]) => hl.insertAdjacentHTML("beforeend", `<div class="row"><span>${d}</span><span class="m">${h}</span></div>`));
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Wire app links to the deployed app URL, or explain if not set.
+      document.querySelectorAll(".app-link").forEach((a) => {
+        const path = a.getAttribute("data-path") || "/";
+        if (APP_URL) {
+          a.setAttribute("href", APP_URL.replace(/\/$/, "") + path);
+        } else {
+          a.addEventListener("click", (e) => {
+            e.preventDefault();
+            alert(
+              "This is a static preview.\n\nThe full DOUHC application (login, booking, dashboards) runs on the deployed app.\n\nDeploy it on Vercel, then set APP_URL at the top of site/index.html so these buttons open the live app."
+            );
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
