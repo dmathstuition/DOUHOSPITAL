@@ -67,7 +67,7 @@ npm run test       # unit tests
 | 3 | Patient management (registration, search, profile, vitals) | ✅ Core complete |
 | 4 | Doctors & departments admin (CRUD + weekly schedules) | ✅ Complete |
 | 5 | Appointments (booking wizard, slot generation, day board, check-in) | ✅ Complete |
-| 6 | Waiting queue | ⏳ Planned |
+| 6 | Waiting queue (check-in, live board, stats, workflow) | ✅ Complete |
 | 7 | Clinical modules (consultations, lab, pharmacy) | ⏳ Planned |
 | 9 | Dashboard analytics, reports, bulk SMS, exports | ⏳ Planned |
 | 10 | Security/perf/a11y hardening & production review | ⏳ Planned |
