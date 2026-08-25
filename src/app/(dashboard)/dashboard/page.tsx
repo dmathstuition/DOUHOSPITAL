@@ -1,0 +1,119 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import {
+  Users,
+  CalendarDays,
+  CalendarClock,
+  ListOrdered,
+  Stethoscope,
+  FlaskConical,
+  PackageX,
+  UserPlus,
+  CalendarPlus,
+  LogIn,
+  ClipboardPlus,
+  Info,
+} from 'lucide-react';
+import { StatCard } from '@/components/shared/stat-card';
+import { AppointmentsChart } from '@/components/dashboard/appointments-chart';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getCurrentUser } from '@/lib/auth';
+import { getDashboardStats } from '@/lib/data/dashboard';
+import { can } from '@/lib/rbac';
+
+export const metadata: Metadata = { title: 'Dashboard' };
+
+const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+export default async function DashboardPage() {
+  const [user, stats] = await Promise.all([getCurrentUser(), getDashboardStats()]);
+  const role = user?.role ?? 'receptionist';
+
+  // Placeholder weekly series until appointment data exists; real aggregation
+  // lands with the appointments module.
+  const chartData = WEEK_DAYS.map((day) => ({ day, count: 0 }));
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">
+          Welcome{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''}
+        </h1>
+        <p className="text-muted-foreground">
+          Here&apos;s an overview of the health center today.
+        </p>
+      </div>
+
+      {!stats.configured && (
+        <Card className="border-warning/40 bg-warning/5">
+          <CardContent className="flex items-start gap-3 p-4 text-sm">
+            <Info className="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+            <div>
+              <p className="font-medium">Backend not yet connected</p>
+              <p className="text-muted-foreground">
+                Supabase environment variables are not set, so live figures show as zero.
+                Configure <code>.env.local</code> and run the migrations in{' '}
+                <code>supabase/migrations</code> to populate the dashboard.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Patients Today" value={stats.patientsToday} icon={Users} />
+        <StatCard label="Appointments Today" value={stats.appointmentsToday} icon={CalendarDays} />
+        <StatCard label="Appointments Tomorrow" value={stats.appointmentsTomorrow} icon={CalendarClock} />
+        <StatCard label="Waiting Patients" value={stats.waitingPatients} icon={ListOrdered} />
+        <StatCard label="Doctors on Duty" value={stats.doctorsOnDuty} icon={Stethoscope} />
+        <StatCard label="Pending Lab Results" value={stats.pendingLabResults} icon={FlaskConical} />
+        <StatCard label="Low Stock Medicines" value={stats.lowStockMedicines} icon={PackageX} />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <AppointmentsChart data={chartData} />
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-2">
+            {can(role, 'REGISTER_PATIENT') && (
+              <QuickLink href="/patients/new" icon={UserPlus} label="Register Patient" />
+            )}
+            {can(role, 'MANAGE_APPOINTMENTS') && (
+              <QuickLink href="/dashboard/appointments" icon={CalendarPlus} label="Book Appointment" />
+            )}
+            {can(role, 'MANAGE_QUEUE') && (
+              <QuickLink href="/dashboard/queue" icon={LogIn} label="Check In Patient" />
+            )}
+            {can(role, 'CREATE_PRESCRIPTION') && (
+              <QuickLink href="/dashboard/prescriptions" icon={ClipboardPlus} label="New Prescription" />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function QuickLink({
+  href,
+  icon: Icon,
+  label,
+}: {
+  href: string;
+  icon: typeof UserPlus;
+  label: string;
+}) {
+  return (
+    <Button asChild variant="outline" className="justify-start">
+      <Link href={href}>
+        <Icon className="h-4 w-4" /> {label}
+      </Link>
+    </Button>
+  );
+}

@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * DOUHC design tokens.
+ * University Green primary + white, with neutral supporting greys.
+ * HSL channel values only (consumed as `hsl(var(--token))`).
+ */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 158 24% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 158 24% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 158 24% 12%;
+
+    /* University Green */
+    --primary: 152 55% 24%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 152 20% 95%;
+    --secondary-foreground: 152 45% 20%;
+
+    --muted: 150 12% 96%;
+    --muted-foreground: 152 8% 40%;
+
+    --accent: 150 30% 92%;
+    --accent-foreground: 152 45% 20%;
+
+    --destructive: 0 72% 46%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 148 55% 32%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 45%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 150 12% 88%;
+    --input: 150 12% 88%;
+    --ring: 152 55% 24%;
+
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: 158 30% 6%;
+    --foreground: 150 12% 92%;
+
+    --card: 158 26% 9%;
+    --card-foreground: 150 12% 92%;
+
+    --popover: 158 26% 9%;
+    --popover-foreground: 150 12% 92%;
+
+    --primary: 150 48% 45%;
+    --primary-foreground: 158 40% 8%;
+
+    --secondary: 158 18% 16%;
+    --secondary-foreground: 150 12% 92%;
+
+    --muted: 158 16% 15%;
+    --muted-foreground: 150 8% 62%;
+
+    --accent: 158 18% 18%;
+    --accent-foreground: 150 12% 92%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 148 45% 45%;
+    --success-foreground: 158 40% 8%;
+
+    --warning: 38 85% 55%;
+    --warning-foreground: 158 40% 8%;
+
+    --border: 158 16% 20%;
+    --input: 158 16% 20%;
+    --ring: 150 48% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  /* Accessible focus ring on all interactive elements */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
