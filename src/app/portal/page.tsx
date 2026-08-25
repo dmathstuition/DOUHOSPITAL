@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/shared/empty-state';
 import { AppointmentStatusBadge } from '@/components/shared/status-badge';
+import { CancelButton } from '@/components/appointments/cancel-button';
 import { getCurrentUser } from '@/lib/auth';
 import {
   getMyPatientRecord,
@@ -51,7 +52,7 @@ export default async function PortalHome() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Button asChild size="lg" className="justify-start">
-          <Link href="/appointments"><CalendarPlus /> Book Appointment</Link>
+          <Link href="/portal/appointments/new"><CalendarPlus /> Book Appointment</Link>
         </Button>
         <Button asChild size="lg" variant="outline" className="justify-start">
           <Link href="/portal#appointments"><CalendarDays /> My Appointments</Link>
@@ -72,19 +73,26 @@ export default async function PortalHome() {
             <EmptyState icon={CalendarDays} title="No appointments yet" />
           ) : (
             <ul className="divide-y">
-              {appointments.map((a) => (
-                <li key={a.id} className="flex items-center justify-between py-3">
-                  <div>
-                    <p className="text-sm font-medium">
-                      {formatDate(a.appointment_date)} · {formatTime(a.start_time)}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {a.reason ?? 'General consultation'}
-                    </p>
-                  </div>
-                  <AppointmentStatusBadge status={a.status as AppointmentStatus} />
-                </li>
-              ))}
+              {appointments.map((a) => {
+                const cancellable =
+                  a.status === 'pending' || a.status === 'confirmed';
+                return (
+                  <li key={a.id} className="flex items-center justify-between gap-3 py-3">
+                    <div>
+                      <p className="text-sm font-medium">
+                        {formatDate(a.appointment_date)} · {formatTime(a.start_time)}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {a.reason ?? 'General consultation'}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <AppointmentStatusBadge status={a.status as AppointmentStatus} />
+                      {cancellable && <CancelButton appointmentId={a.id} />}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </CardContent>

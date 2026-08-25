@@ -66,7 +66,7 @@ npm run test       # unit tests
 | 8 (infra) | Google Apps Script + Termii engine, notification service | ✅ Complete |
 | 3 | Patient management (registration, search, profile, vitals) | ✅ Core complete |
 | 4 | Doctors & departments admin (CRUD + weekly schedules) | ✅ Complete |
-| 5 | Appointments (booking, slots, calendar) | ⏳ Planned |
+| 5 | Appointments (booking wizard, slot generation, day board, check-in) | ✅ Complete |
 | 6 | Waiting queue | ⏳ Planned |
 | 7 | Clinical modules (consultations, lab, pharmacy) | ⏳ Planned |
 | 9 | Dashboard analytics, reports, bulk SMS, exports | ⏳ Planned |

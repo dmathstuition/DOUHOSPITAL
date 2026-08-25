@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { can } from '@/lib/rbac';
 import { patientSchema, type PatientInput } from '@/lib/validation/patient';
+import { searchPatients } from '@/lib/data/patients';
 
 export interface ActionResult {
   ok: boolean;
@@ -72,4 +73,19 @@ export async function createPatientAction(input: PatientInput): Promise<ActionRe
 
   revalidatePath('/patients');
   return { ok: true, id: data.id };
+}
+
+/** Staff patient lookup for booking on behalf of a patient. */
+export async function searchPatientsAction(
+  query: string,
+): Promise<{ id: string; name: string; code: string; matric: string | null }[]> {
+  const user = await getCurrentUser();
+  if (!user || !can(user.role, 'SEARCH_PATIENTS')) return [];
+  const { rows } = await searchPatients({ query, pageSize: 10 });
+  return rows.map((p) => ({
+    id: p.id,
+    name: `${p.last_name}, ${p.first_name}`,
+    code: p.patient_code,
+    matric: p.matric_number,
+  }));
 }
