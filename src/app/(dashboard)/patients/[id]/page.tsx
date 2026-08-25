@@ -15,12 +15,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/shared/empty-state';
 import { AppointmentStatusBadge } from '@/components/shared/status-badge';
+import { FileText } from 'lucide-react';
 import {
   getPatient,
   getPatientVitals,
   getPatientAppointments,
   getPatientAlerts,
 } from '@/lib/data/patients';
+import { getPatientRecords } from '@/lib/data/clinical';
+import { PatientClinicalActions } from '@/components/clinical/patient-clinical-actions';
+import { getCurrentUser } from '@/lib/auth';
+import { can } from '@/lib/rbac';
 import { calculateAge, formatDate, formatTime, initials } from '@/lib/utils';
 import { formatNigerianPhone } from '@/lib/utils/phone';
 import type { AppointmentStatus } from '@/types/database';
@@ -36,13 +41,18 @@ export default async function PatientProfilePage({
   const patient = await getPatient(id);
   if (!patient) notFound();
 
-  const [vitals, appointments, alerts] = await Promise.all([
+  const [user, vitals, appointments, alerts, records] = await Promise.all([
+    getCurrentUser(),
     getPatientVitals(id),
     getPatientAppointments(id),
     getPatientAlerts(id),
+    getPatientRecords(id),
   ]);
 
   const age = calculateAge(patient.date_of_birth);
+  const canVitals = can(user?.role, 'RECORD_VITALS');
+  const canConsult = can(user?.role, 'CREATE_CONSULTATION');
+  const canViewNotes = can(user?.role, 'VIEW_CLINICAL_NOTES');
 
   return (
     <div className="space-y-6">
@@ -76,6 +86,13 @@ export default async function PatientProfilePage({
           {patient.status}
         </Badge>
       </div>
+
+      {/* Clinical quick-actions (role-gated) */}
+      <PatientClinicalActions
+        patientId={patient.id}
+        canVitals={canVitals}
+        canConsult={canConsult}
+      />
 
       {/* Medical alerts (prominent) */}
       {alerts.length > 0 && (
@@ -196,6 +213,53 @@ export default async function PatientProfilePage({
               )}
             </CardContent>
           </Card>
+
+          {/* Medical history (consultations) — clinical staff only */}
+          {canViewNotes && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <FileText className="h-4 w-4 text-primary" /> Medical History
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {records.length === 0 ? (
+                  <EmptyState icon={FileText} title="No consultations recorded" />
+                ) : (
+                  <ul className="divide-y">
+                    {records.map((r) => (
+                      <li key={r.id} className="py-3">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium">
+                            {r.diagnosis ?? 'Consultation'}
+                          </p>
+                          <span className="text-xs text-muted-foreground">
+                            {formatDate(r.created_at)}
+                          </span>
+                        </div>
+                        {r.symptoms && (
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            <span className="font-medium">Symptoms:</span> {r.symptoms}
+                          </p>
+                        )}
+                        {r.treatment_plan && (
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-medium">Plan:</span> {r.treatment_plan}
+                          </p>
+                        )}
+                        {r.follow_up_date && (
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-medium">Follow-up:</span>{' '}
+                            {formatDate(r.follow_up_date)}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

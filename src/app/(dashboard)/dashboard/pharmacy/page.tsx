@@ -1,22 +1,40 @@
 import type { Metadata } from 'next';
-import { ModulePlaceholder } from '@/components/shared/module-placeholder';
+import { redirect } from 'next/navigation';
+import { MedicationManager } from '@/components/clinical/medication-manager';
+import { DispenseList } from '@/components/clinical/dispense-list';
+import { getCurrentUser } from '@/lib/auth';
+import { can } from '@/lib/rbac';
+import { listMedications, listPrescriptions } from '@/lib/data/clinical';
 
 export const metadata: Metadata = { title: 'Pharmacy' };
 
-export default function PharmacyPage() {
+export default async function PharmacyPage() {
+  const user = await getCurrentUser();
+  if (!user || !can(user.role, 'DISPENSE_MEDICATION')) redirect('/dashboard');
+
+  const [medications, prescriptions] = await Promise.all([
+    listMedications(),
+    listPrescriptions(),
+  ]);
+
   return (
-    <ModulePlaceholder
-      title="Pharmacy"
-      phase="Phase 7"
-      description="Medication inventory lives in the medications table with reorder levels and expiry tracking; dispensing links to prescriptions."
-      planned={[
-        'View & dispense prescriptions',
-        'Partial / full dispense',
-        'Medication inventory',
-        'Low-stock alerts',
-        'Expiry alerts',
-        'Batch, supplier, price',
-      ]}
-    />
+    <div className="space-y-8">
+      <h1 className="text-2xl font-bold tracking-tight">Pharmacy</h1>
+
+      <section>
+        <h2 className="mb-3 text-lg font-semibold">Awaiting Dispensing</h2>
+        <DispenseList
+          prescriptions={prescriptions.map((p) => ({
+            id: p.id,
+            patient_name: p.patient_name,
+            item_count: p.item_count,
+            dispense_state: p.dispense_state,
+            diagnosis: p.diagnosis,
+          }))}
+        />
+      </section>
+
+      <MedicationManager medications={medications} />
+    </div>
   );
 }

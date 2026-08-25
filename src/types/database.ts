@@ -168,6 +168,69 @@ export type NotificationRow = {
   created_at: string;
 };
 
+export type MedicalRecordRow = Timestamps & {
+  id: string;
+  patient_id: string;
+  doctor_id: string | null;
+  appointment_id: string | null;
+  symptoms: string | null;
+  examination: string | null;
+  diagnosis: string | null;
+  treatment_plan: string | null;
+  doctor_notes: string | null;
+  follow_up_date: string | null;
+};
+
+export type PrescriptionItemRow = {
+  id: string;
+  prescription_id: string;
+  medication_name: string;
+  dosage: string | null;
+  frequency: string | null;
+  duration: string | null;
+  route: string | null;
+  instructions: string | null;
+  quantity: number | null;
+  dispensed_qty: number;
+};
+
+export type MedicationRow = Timestamps & {
+  id: string;
+  name: string;
+  category: string | null;
+  batch_number: string | null;
+  quantity: number;
+  expiry_date: string | null;
+  reorder_level: number;
+  supplier: string | null;
+  price: number | null;
+};
+
+export type LaboratoryTestRow = Timestamps & {
+  id: string;
+  patient_id: string;
+  doctor_id: string | null;
+  test_name: string;
+  clinical_reason: string | null;
+  priority: 'routine' | 'urgent' | 'stat';
+  requested_date: string;
+  status: 'requested' | 'sample_collected' | 'processing' | 'result_ready' | 'reviewed';
+};
+
+export type LaboratoryResultRow = {
+  id: string;
+  test_id: string;
+  patient_id: string;
+  result_summary: string | null;
+  reference_range: string | null;
+  interpretation: string | null;
+  comments: string | null;
+  file_path: string | null;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+};
+
 export type PrescriptionRow = Timestamps & {
   id: string;
   patient_id: string;
@@ -225,6 +288,11 @@ export type Database = {
       doctor_schedules: TableShape<DoctorScheduleRow>;
       appointments: TableShape<AppointmentRow>;
       prescriptions: TableShape<PrescriptionRow>;
+      prescription_items: TableShape<PrescriptionItemRow>;
+      medical_records: TableShape<MedicalRecordRow>;
+      medications: TableShape<MedicationRow>;
+      laboratory_tests: TableShape<LaboratoryTestRow>;
+      laboratory_results: TableShape<LaboratoryResultRow>;
       vital_signs: TableShape<VitalSignRow>;
       notifications: TableShape<NotificationRow>;
       system_settings: TableShape<SystemSettingRow>;
