@@ -97,7 +97,6 @@ export async function createAppointmentAction(input: BookingInput): Promise<Acti
   await enqueueConfirmation(supabase, data.id, patientId, v.doctor_id, v.department_id, v.appointment_date, v.start_time);
 
   revalidatePath('/dashboard/appointments');
-  revalidatePath('/portal');
   return { ok: true, id: data.id };
 }
 
@@ -183,7 +182,6 @@ export async function cancelAppointmentAction(id: string): Promise<ActionResult>
     .eq('id', id);
   if (error) return { ok: false, error: 'Unable to cancel the appointment.' };
 
-  revalidatePath('/portal');
   revalidatePath('/dashboard/appointments');
   return { ok: true, id };
 }

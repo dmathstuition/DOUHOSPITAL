@@ -18,6 +18,8 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog } from '@/components/ui/dialog';
+import { Select } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { EmptyState } from '@/components/shared/empty-state';
 import { ListOrdered } from 'lucide-react';
 import { formatTime } from '@/lib/utils';
@@ -58,7 +60,18 @@ const ACTIONS: Record<QStatus, { status: QStatus; label: string; icon: typeof Ph
   completed: [],
 };
 
-export function QueueBoard({ entries }: { entries: QueueEntry[] }) {
+interface DoctorOption {
+  id: string;
+  full_name: string;
+}
+
+export function QueueBoard({
+  entries,
+  doctors,
+}: {
+  entries: QueueEntry[];
+  doctors: DoctorOption[];
+}) {
   const router = useRouter();
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [checkInOpen, setCheckInOpen] = useState(false);
@@ -99,6 +112,7 @@ export function QueueBoard({ entries }: { entries: QueueEntry[] }) {
                 <p className="font-medium">{e.patient_name}</p>
                 <p className="text-xs text-muted-foreground">
                   {e.patient_code} · in {formatTime(e.checked_in_at.slice(11, 16))}
+                  {e.doctor_name ? ` · Dr ${e.doctor_name}` : ' · Unassigned'}
                 </p>
               </div>
               <Badge variant={STATUS_VARIANT[e.status]}>{STATUS_LABEL[e.status]}</Badge>
@@ -145,6 +159,7 @@ export function QueueBoard({ entries }: { entries: QueueEntry[] }) {
 
       {checkInOpen && (
         <CheckInDialog
+          doctors={doctors}
           onClose={() => setCheckInOpen(false)}
           onDone={() => {
             setCheckInOpen(false);
@@ -156,9 +171,18 @@ export function QueueBoard({ entries }: { entries: QueueEntry[] }) {
   );
 }
 
-function CheckInDialog({ onClose, onDone }: { onClose: () => void; onDone: () => void }) {
+function CheckInDialog({
+  doctors,
+  onClose,
+  onDone,
+}: {
+  doctors: DoctorOption[];
+  onClose: () => void;
+  onDone: () => void;
+}) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<{ id: string; name: string; code: string; matric: string | null }[]>([]);
+  const [doctorId, setDoctorId] = useState('');
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -174,7 +198,7 @@ function CheckInDialog({ onClose, onDone }: { onClose: () => void; onDone: () =>
   function checkIn(patientId: string) {
     setError(null);
     startTransition(async () => {
-      const res = await checkInAction(patientId);
+      const res = await checkInAction(patientId, doctorId || undefined);
       if (res.ok) {
         setSuccess(`Checked in as ${res.queueNumber}`);
         setTimeout(onDone, 800);
@@ -185,13 +209,22 @@ function CheckInDialog({ onClose, onDone }: { onClose: () => void; onDone: () =>
   }
 
   return (
-    <Dialog open onClose={onClose} title="Check in a patient" description="Search for the patient to add them to the queue.">
+    <Dialog open onClose={onClose} title="Check in a patient" description="Search for the patient, assign a doctor, and add them to the queue.">
       {success ? (
         <p className="rounded-md bg-success/10 px-3 py-3 text-center text-sm font-medium text-success">
           {success}
         </p>
       ) : (
         <>
+          <div className="mb-4 space-y-2">
+            <Label>Assign to doctor</Label>
+            <Select value={doctorId} onChange={(e) => setDoctorId(e.target.value)}>
+              <option value="">Unassigned</option>
+              {doctors.map((d) => (
+                <option key={d.id} value={d.id}>Dr {d.full_name}</option>
+              ))}
+            </Select>
+          </div>
           <form onSubmit={search} className="flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

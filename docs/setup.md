@@ -40,13 +40,19 @@ See `docs/database.md` for details on schema, RLS and seed data.
 
 ## 3. Create the first Super Admin
 
-Self-signup always creates a `patient` (enforced in the DB — user metadata can
-never grant staff roles). Elevate your own account once:
+There is no public sign-up — staff accounts are created by an admin from within
+the app (Dashboard → Users → Add Worker). To bootstrap the very first admin,
+create a user in the Supabase dashboard (Authentication → Add user, with a
+password and "auto-confirm"), then elevate them once:
 
 ```sql
 update public.profiles set role = 'super_admin'
 where id = (select id from auth.users where email = 'you@dou.edu.ng');
 ```
+
+After that, sign in and use **Users → Add Worker** to create doctors, nurses and
+receptionists. Adding a worker with the **Doctor** role also creates a linked
+doctor record so patients can be assigned to them.
 
 ## 4. Run
 

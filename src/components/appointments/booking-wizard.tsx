@@ -41,7 +41,7 @@ const STEP_ORDER: Step[] = ['department', 'doctor', 'date', 'time', 'reason', 'r
 
 export function BookingWizard({
   departments,
-  redirectTo = '/portal',
+  redirectTo = '/dashboard/appointments',
   patientId,
 }: {
   departments: Dept[];

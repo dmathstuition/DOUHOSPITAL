@@ -8,7 +8,7 @@ type CookieToSet = { name: string; value: string; options: CookieOptions };
  * authenticated areas. Fine-grained authorization still happens server-side
  * (getCurrentUser) and in RLS — this is a first, coarse gate only.
  */
-const PROTECTED_PREFIXES = ['/dashboard', '/portal', '/admin', '/patients'];
+const PROTECTED_PREFIXES = ['/dashboard', '/admin', '/patients'];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });

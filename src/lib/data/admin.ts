@@ -4,7 +4,24 @@ import type {
   DepartmentRow,
   DoctorRow,
   DoctorScheduleRow,
+  ProfileRow,
 } from '@/types/database';
+
+/** All staff accounts (non-patient profiles) for user management. */
+export async function listStaff(): Promise<
+  Pick<ProfileRow, 'id' | 'full_name' | 'role' | 'is_active' | 'phone'>[]
+> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('profiles')
+    .select('id, full_name, role, is_active, phone')
+    .neq('role', 'patient')
+    .order('role', { ascending: true });
+  return (data ?? []) as Pick<
+    ProfileRow,
+    'id' | 'full_name' | 'role' | 'is_active' | 'phone'
+  >[];
+}
 
 /** All departments (any status) for admin management. */
 export async function listDepartments(): Promise<DepartmentRow[]> {
@@ -27,6 +44,19 @@ export async function listActiveDepartments(): Promise<
     .eq('status', 'active')
     .order('name', { ascending: true });
   return (data ?? []) as Pick<DepartmentRow, 'id' | 'name'>[];
+}
+
+/** Active doctors (id + name) for assignment dropdowns. */
+export async function listActiveDoctors(): Promise<
+  { id: string; full_name: string }[]
+> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('doctors')
+    .select('id, full_name')
+    .eq('status', 'active')
+    .order('full_name', { ascending: true });
+  return (data ?? []) as { id: string; full_name: string }[];
 }
 
 export async function getDepartment(id: string): Promise<DepartmentRow | null> {

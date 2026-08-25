@@ -21,7 +21,7 @@ export function SiteFooter() {
             <li><Link href="/services" className="hover:text-foreground">Services</Link></li>
             <li><Link href="/departments" className="hover:text-foreground">Departments</Link></li>
             <li><Link href="/doctors" className="hover:text-foreground">Doctors</Link></li>
-            <li><Link href="/appointments" className="hover:text-foreground">Book Appointment</Link></li>
+            <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
           </ul>
         </div>
 
@@ -31,7 +31,6 @@ export function SiteFooter() {
             <li><Link href="/privacy" className="hover:text-foreground">Privacy Notice</Link></li>
             <li><Link href="/terms" className="hover:text-foreground">Terms of Use</Link></li>
             <li><Link href="/login" className="hover:text-foreground">Staff Login</Link></li>
-            <li><Link href="/register" className="hover:text-foreground">Patient Registration</Link></li>
           </ul>
         </div>
 

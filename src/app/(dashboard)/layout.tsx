@@ -11,10 +11,10 @@ export default async function DashboardLayout({
 }) {
   const user = await getCurrentUser();
 
-  // Coarse gate: unauthenticated users go to login. Patients belong in the
-  // portal, not the staff dashboard. RLS enforces record-level access beyond this.
+  // Coarse gate: only staff use this app. Patients are records managed by
+  // staff and have no login. RLS enforces record-level access beyond this.
   if (!user) redirect('/login');
-  if (!isStaff(user.role)) redirect('/portal');
+  if (!isStaff(user.role)) redirect('/login');
 
   const items = navForRole(user.role);
 

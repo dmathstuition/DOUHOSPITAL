@@ -22,7 +22,7 @@ on conflict (name) do nothing;
 insert into public.system_settings (key, value) values
   ('health_center', '{"name":"Dennis Osadebay University Health Center","short_name":"DOUHC","address":"Dennis Osadebay University, Asaba, Delta State, Nigeria","email":"healthcenter@dou.edu.ng","phone":"+234 800 000 0000","emergency_phone":"+234 800 000 0911"}'::jsonb),
   ('appointments', '{"consultation_minutes":30,"booking_window_days":30,"allow_cancellation":true,"cancellation_hours":12}'::jsonb),
-  ('notifications', '{"sms_enabled":true,"email_enabled":true,"reminder_hours_before":24,"follow_up_days_after":2}'::jsonb),
+  ('notifications', '{"sms_enabled":true,"email_enabled":true,"reminder_days_before":[2,1],"follow_up_days_after":2}'::jsonb),
   ('sms', '{"provider":"termii","sender_id":"DOUHC","configured":false}'::jsonb),
   ('privacy', '{"retention_years":7,"notice_version":1}'::jsonb)
 on conflict (key) do nothing;

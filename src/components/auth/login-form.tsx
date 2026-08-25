@@ -51,9 +51,9 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">Sign in</CardTitle>
+        <CardTitle className="text-2xl">Staff sign in</CardTitle>
         <CardDescription>
-          Access your patient portal or staff dashboard.
+          Sign in to the DOUHC staff dashboard.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -106,11 +106,9 @@ export function LoginForm() {
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          New patient?{' '}
-          <Link href="/register" className="font-medium text-primary hover:underline">
-            Create an account
-          </Link>
+        <p className="mt-6 text-center text-xs text-muted-foreground">
+          Staff accounts are created by the administrator. Contact the health
+          center administration if you need access.
         </p>
       </CardContent>
     </Card>

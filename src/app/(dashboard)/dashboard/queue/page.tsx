@@ -6,6 +6,7 @@ import { QueueBoard } from '@/components/queue/queue-board';
 import { getCurrentUser } from '@/lib/auth';
 import { can } from '@/lib/rbac';
 import { getTodayQueue, computeQueueStats } from '@/lib/data/queue';
+import { listActiveDoctors } from '@/lib/data/admin';
 
 export const metadata: Metadata = { title: 'Waiting Queue' };
 
@@ -13,7 +14,7 @@ export default async function QueuePage() {
   const user = await getCurrentUser();
   if (!user || !can(user.role, 'MANAGE_QUEUE')) redirect('/dashboard');
 
-  const entries = await getTodayQueue();
+  const [entries, doctors] = await Promise.all([getTodayQueue(), listActiveDoctors()]);
   const stats = computeQueueStats(entries);
 
   return (
@@ -40,7 +41,7 @@ export default async function QueuePage() {
         />
       </div>
 
-      <QueueBoard entries={entries} />
+      <QueueBoard entries={entries} doctors={doctors} />
     </div>
   );
 }

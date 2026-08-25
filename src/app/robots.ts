@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
       // Never expose authenticated/health areas to crawlers.
-      disallow: ['/dashboard', '/portal', '/admin', '/patients', '/auth'],
+      disallow: ['/dashboard', '/admin', '/patients', '/auth'],
     },
     sitemap: `${siteConfig.url}/sitemap.xml`,
   };

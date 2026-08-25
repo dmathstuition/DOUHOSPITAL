@@ -258,6 +258,7 @@ export type MedicalAlertRow = Timestamps & {
 export type WaitingQueueRow = {
   id: string;
   patient_id: string;
+  assigned_doctor_id: string | null;
   queue_number: string;
   status:
     | 'waiting'

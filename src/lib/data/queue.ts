@@ -11,6 +11,7 @@ export interface QueueEntry {
   patient_id: string;
   patient_name: string;
   patient_code: string;
+  doctor_name: string | null;
 }
 
 const ACTIVE_STATUSES: WaitingQueueRow['status'][] = [
@@ -30,7 +31,8 @@ export async function getTodayQueue(): Promise<QueueEntry[]> {
     .from('waiting_queue')
     .select(
       `id, queue_number, status, checked_in_at, completed_at, patient_id,
-       patients:patient_id ( first_name, last_name, patient_code )`,
+       patients:patient_id ( first_name, last_name, patient_code ),
+       doctors:assigned_doctor_id ( full_name )`,
     )
     .gte('checked_in_at', `${today}T00:00:00`)
     .order('checked_in_at', { ascending: true });
@@ -47,6 +49,7 @@ export async function getTodayQueue(): Promise<QueueEntry[]> {
       ? `${q.patients.first_name} ${q.patients.last_name}`
       : 'Unknown',
     patient_code: q.patients?.patient_code ?? '—',
+    doctor_name: q.doctors?.full_name ?? null,
   }));
 }
 

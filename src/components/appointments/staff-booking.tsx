@@ -19,10 +19,16 @@ interface PatientHit {
   matric: string | null;
 }
 
-export function StaffBooking({ departments }: { departments: Dept[] }) {
+export function StaffBooking({
+  departments,
+  initialPatient,
+}: {
+  departments: Dept[];
+  initialPatient?: PatientHit | null;
+}) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PatientHit[]>([]);
-  const [selected, setSelected] = useState<PatientHit | null>(null);
+  const [selected, setSelected] = useState<PatientHit | null>(initialPatient ?? null);
   const [isPending, startTransition] = useTransition();
   const [searched, setSearched] = useState(false);
 

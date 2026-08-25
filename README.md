@@ -1,8 +1,16 @@
 # DOUHC — Dennis Osadebay University Health Center
 
-A university health-center management platform: public website, patient portal
-and secure staff/admin dashboard. Built with Next.js + Supabase, with a Google
-Apps Script + Termii automation layer for SMS/email.
+A university health-center management platform: a public information website and
+a secure **staff-only** dashboard (admin, doctor, nurse, receptionist). Patients
+are staff-managed records — they do not log in. Built with Next.js + Supabase,
+with a Google Apps Script + Termii automation layer for SMS/email.
+
+**Core workflow:** a nurse registers the patient on arrival, fills in their
+details, and assigns them to a doctor. The doctor sees assigned patients on their
+**My Patients** worklist, attends to them, and can schedule a follow-up
+appointment — the system then sends the patient SMS/email reminders **2 days and
+1 day** before that appointment. Only the **admin** can add doctors and other
+workers and (via the nurse) direct who patients are assigned to.
 
 > Not a landing page — a healthcare management system. See the phased build
 > status below.
@@ -69,7 +77,8 @@ npm run test       # unit tests
 | 5 | Appointments (booking wizard, slot generation, day board, check-in) | ✅ Complete |
 | 6 | Waiting queue (check-in, live board, stats, workflow) | ✅ Complete |
 | 7 | Clinical modules (consultations, vitals, prescriptions, lab, pharmacy) | ✅ Complete |
-| 9 | Dashboard analytics, reports, bulk SMS, exports | ⏳ Planned |
+| — | Staff-only pivot: nurse→doctor assignment, doctor worklist, admin worker management, 2-day + 1-day reminders (patient portal removed) | ✅ Complete |
+| 9 | Dashboard analytics, reports, bulk SMS, Excel export, audit viewer, settings | ⏳ Partly (Users ✅) |
 | 10 | Security/perf/a11y hardening & production review | ⏳ Planned |
 
 Phase status is tracked honestly — planned modules render a clear

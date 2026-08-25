@@ -6,14 +6,32 @@ import { StaffBooking } from '@/components/appointments/staff-booking';
 import { getCurrentUser } from '@/lib/auth';
 import { can } from '@/lib/rbac';
 import { listActiveDepartments } from '@/lib/data/admin';
+import { getPatient } from '@/lib/data/patients';
 
 export const metadata: Metadata = { title: 'New Appointment' };
 
-export default async function StaffNewAppointmentPage() {
+export default async function StaffNewAppointmentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ patientId?: string }>;
+}) {
   const user = await getCurrentUser();
   if (!user || !can(user.role, 'MANAGE_APPOINTMENTS')) redirect('/dashboard');
 
-  const departments = await listActiveDepartments();
+  const { patientId } = await searchParams;
+  const [departments, patient] = await Promise.all([
+    listActiveDepartments(),
+    patientId ? getPatient(patientId) : Promise.resolve(null),
+  ]);
+
+  const initialPatient = patient
+    ? {
+        id: patient.id,
+        name: `${patient.last_name}, ${patient.first_name}`,
+        code: patient.patient_code,
+        matric: patient.matric_number,
+      }
+    : null;
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -29,7 +47,7 @@ export default async function StaffNewAppointmentPage() {
           Book on behalf of a patient. Select the patient, then choose a slot.
         </p>
       </div>
-      <StaffBooking departments={departments} />
+      <StaffBooking departments={departments} initialPatient={initialPatient} />
     </div>
   );
 }

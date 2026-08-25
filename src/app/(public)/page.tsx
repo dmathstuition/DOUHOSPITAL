@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import {
-  CalendarPlus,
-  LogIn,
+  Stethoscope,
   Building2,
   PhoneCall,
   Clock,
@@ -11,6 +10,7 @@ import {
   Siren,
   UserRound,
   ArrowRight,
+  type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -51,16 +51,19 @@ export default async function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
-                <Link href="/appointments">
-                  <CalendarPlus /> Book Appointment
+                <Link href="/services">
+                  <Stethoscope /> Our Services
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/login">
-                  <LogIn /> Student / Patient Login
+                <Link href="/contact">
+                  <PhoneCall /> Contact Us
                 </Link>
               </Button>
             </div>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Visit the health center to register — our staff will attend to you.
+            </p>
           </div>
 
           {/* Hero image placeholder — replace public/images/health-center-hero.jpg */}
@@ -85,9 +88,9 @@ export default async function HomePage() {
       {/* Quick actions */}
       <section className="container py-12">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <QuickAction href="/appointments" icon={CalendarPlus} label="Book Appointment" />
-          <QuickAction href="/login" icon={UserRound} label="Patient Login" />
+          <QuickAction href="/services" icon={Stethoscope} label="Our Services" />
           <QuickAction href="/departments" icon={Building2} label="View Departments" />
+          <QuickAction href="/doctors" icon={UserRound} label="Our Doctors" />
           <QuickAction href="/contact" icon={PhoneCall} label="Contact Health Center" />
         </div>
       </section>
@@ -239,7 +242,7 @@ function QuickAction({
   label,
 }: {
   href: string;
-  icon: typeof CalendarPlus;
+  icon: LucideIcon;
   label: string;
 }) {
   return (

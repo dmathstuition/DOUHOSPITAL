@@ -26,7 +26,10 @@ async function authorize() {
  * race-safe database trigger, so concurrent check-ins never collide.
  * Guards against checking the same patient in twice while still active.
  */
-export async function checkInAction(patientId: string): Promise<ActionResult> {
+export async function checkInAction(
+  patientId: string,
+  assignedDoctorId?: string,
+): Promise<ActionResult> {
   const { user, error } = await authorize();
   if (error || !user) return { ok: false, error: error ?? 'Not authorized.' };
 
@@ -47,7 +50,12 @@ export async function checkInAction(patientId: string): Promise<ActionResult> {
 
   const { data, error: insertError } = await supabase
     .from('waiting_queue')
-    .insert({ patient_id: patientId, status: 'waiting', created_by: user.id })
+    .insert({
+      patient_id: patientId,
+      status: 'waiting',
+      assigned_doctor_id: assignedDoctorId || null,
+      created_by: user.id,
+    })
     .select('queue_number')
     .single();
 

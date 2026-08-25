@@ -13,7 +13,7 @@ Script only reads pending work and delivers it (Termii SMS, MailApp email).
 | `Email.gs` | Email via MailApp |
 | `Appointments.gs` | Appointment query/formatting helpers |
 | `Notifications.gs` | Drains the `notifications` queue (idempotent) |
-| `Reminders.gs` | 24-hour reminders (once per appointment) |
+| `Reminders.gs` | Appointment reminders at 2 days AND 1 day before (once each) |
 | `FollowUps.gs` | 2-day post-visit follow-ups (once per visit) |
 | `Logs.gs` | Writes `notification_logs` |
 | `Code.gs` | Entry points, trigger installer, secured webhook |
