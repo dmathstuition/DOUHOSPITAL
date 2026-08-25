@@ -213,9 +213,12 @@ create table if not exists public.waiting_queue (
   created_by    uuid references public.profiles(id) on delete set null
 );
 create index if not exists idx_queue_status on public.waiting_queue (status, checked_in_at);
--- One active queue entry per day per number.
+-- One queue entry per number per day. `checked_in_at::date` is only STABLE
+-- (timezone-dependent), which Postgres forbids in an index expression, so we
+-- anchor to a fixed zone (UTC) to make the expression IMMUTABLE. This matches
+-- how the app derives "today" (ISO/UTC dates) and the daily queue-number reset.
 create unique index if not exists uq_queue_number_day
-  on public.waiting_queue (queue_number, (checked_in_at::date));
+  on public.waiting_queue (queue_number, ((checked_in_at at time zone 'UTC')::date));
 
 -- ---------------------------------------------------------------------------
 -- emergency_contacts & medical_alerts
