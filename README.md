@@ -64,8 +64,8 @@ npm run test       # unit tests
 | 1 | Foundation: Next.js, auth, public site, branding, dashboard shell | ✅ Complete |
 | 2 | Database: schema, migrations, constraints, RLS, audit | ✅ Complete |
 | 8 (infra) | Google Apps Script + Termii engine, notification service | ✅ Complete |
-| 3 | Patient management (registration, search, profile, vitals) | 🚧 In progress |
-| 4 | Doctors & departments admin | 🚧 In progress |
+| 3 | Patient management (registration, search, profile, vitals) | ✅ Core complete |
+| 4 | Doctors & departments admin (CRUD + weekly schedules) | ✅ Complete |
 | 5 | Appointments (booking, slots, calendar) | ⏳ Planned |
 | 6 | Waiting queue | ⏳ Planned |
 | 7 | Clinical modules (consultations, lab, pharmacy) | ⏳ Planned |

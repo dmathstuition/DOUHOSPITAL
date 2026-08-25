@@ -1,20 +1,16 @@
 import type { Metadata } from 'next';
-import { ModulePlaceholder } from '@/components/shared/module-placeholder';
+import { redirect } from 'next/navigation';
+import { DepartmentManager } from '@/components/admin/department-manager';
+import { getCurrentUser } from '@/lib/auth';
+import { can } from '@/lib/rbac';
+import { listDepartments } from '@/lib/data/admin';
 
 export const metadata: Metadata = { title: 'Departments' };
 
-export default function DepartmentsAdminPage() {
-  return (
-    <ModulePlaceholder
-      title="Departments"
-      phase="Phase 4"
-      description="Departments are seeded and shown publicly. Admin management uses the departments table with soft deactivation to preserve historical records."
-      planned={[
-        'Create / edit departments',
-        'Deactivate (never hard-delete)',
-        'Location, phone, opening hours',
-        'Status management',
-      ]}
-    />
-  );
+export default async function DepartmentsAdminPage() {
+  const user = await getCurrentUser();
+  if (!user || !can(user.role, 'MANAGE_DEPARTMENTS')) redirect('/dashboard');
+
+  const departments = await listDepartments();
+  return <DepartmentManager departments={departments} />;
 }

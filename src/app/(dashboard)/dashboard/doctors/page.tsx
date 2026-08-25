@@ -1,22 +1,20 @@
 import type { Metadata } from 'next';
-import { ModulePlaceholder } from '@/components/shared/module-placeholder';
+import { redirect } from 'next/navigation';
+import { DoctorManager } from '@/components/admin/doctor-manager';
+import { getCurrentUser } from '@/lib/auth';
+import { can } from '@/lib/rbac';
+import { listDoctorsAdmin, listActiveDepartments } from '@/lib/data/admin';
 
 export const metadata: Metadata = { title: 'Doctors' };
 
-export default function DoctorsAdminPage() {
-  return (
-    <ModulePlaceholder
-      title="Doctors"
-      phase="Phase 4"
-      description="Doctor records, photos, specializations and weekly schedules are modelled in the doctors and doctor_schedules tables and surface on the public site."
-      planned={[
-        'Create / edit / deactivate doctors',
-        'Photo upload (public bucket)',
-        'Assign department & specialization',
-        'Configure weekly schedules',
-        'Different hours per day',
-        'Doctors-on-duty derivation',
-      ]}
-    />
-  );
+export default async function DoctorsAdminPage() {
+  const user = await getCurrentUser();
+  if (!user || !can(user.role, 'MANAGE_DOCTORS')) redirect('/dashboard');
+
+  const [doctors, departments] = await Promise.all([
+    listDoctorsAdmin(),
+    listActiveDepartments(),
+  ]);
+
+  return <DoctorManager doctors={doctors} departments={departments} />;
 }
