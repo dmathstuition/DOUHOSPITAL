@@ -168,6 +168,16 @@ export type NotificationRow = {
   created_at: string;
 };
 
+export type PrescriptionRow = Timestamps & {
+  id: string;
+  patient_id: string;
+  doctor_id: string | null;
+  record_id: string | null;
+  diagnosis: string | null;
+  status: 'active' | 'completed' | 'cancelled';
+  dispense_state: 'pending' | 'partial' | 'dispensed';
+};
+
 export type SystemSettingRow = {
   key: string;
   value: Json;
@@ -214,6 +224,7 @@ export type Database = {
       doctors: TableShape<DoctorRow>;
       doctor_schedules: TableShape<DoctorScheduleRow>;
       appointments: TableShape<AppointmentRow>;
+      prescriptions: TableShape<PrescriptionRow>;
       vital_signs: TableShape<VitalSignRow>;
       notifications: TableShape<NotificationRow>;
       system_settings: TableShape<SystemSettingRow>;
