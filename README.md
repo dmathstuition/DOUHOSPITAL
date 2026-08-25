@@ -79,7 +79,8 @@ npm run test       # unit tests
 | 7 | Clinical modules (consultations, vitals, prescriptions, lab, pharmacy) | ✅ Complete |
 | — | Staff-only pivot: nurse→doctor assignment, doctor worklist, admin worker management, 2-day + 1-day reminders (patient portal removed) | ✅ Complete |
 | 9 | Dashboard analytics, reports + Excel export, bulk SMS, audit viewer, notifications monitor, settings, users | ✅ Complete |
-| 10 | Security/perf/a11y hardening & production review | ⏳ Planned |
+| — | Public registration requests → staff review/approve → normal workflow | ✅ Complete |
+| 10 | Security/perf/a11y hardening, CSP, CI, production-readiness review | ✅ Complete |
 
 Phase status is tracked honestly — planned modules render a clear
 "module is being set up" state rather than faking functionality.
