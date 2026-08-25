@@ -2,6 +2,14 @@
 -- DOUHC — 0001 Extensions, enums and shared helper functions
 -- ============================================================================
 
+-- The role-helper functions below are written in `language sql` and reference
+-- public.profiles, which is created in migration 0002. Postgres validates SQL
+-- function bodies at CREATE time, so without this the migration fails with
+-- "relation public.profiles does not exist". Disabling body validation for this
+-- migration lets the functions be created now; they resolve correctly at
+-- runtime once 0002 has created the table. Safe to re-run.
+set check_function_bodies = off;
+
 create extension if not exists "pgcrypto";      -- gen_random_uuid()
 create extension if not exists "citext";         -- case-insensitive text (emails)
 
