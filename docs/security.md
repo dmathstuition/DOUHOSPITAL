@@ -31,9 +31,19 @@ Never exposed to client JavaScript:
 
 ## Transport & headers
 
-- HTTPS everywhere; HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options`,
-  `Referrer-Policy`, and a restrictive `Permissions-Policy` set in
-  `next.config.mjs`.
+- HTTPS everywhere; a **Content-Security-Policy** plus HSTS,
+  `X-Frame-Options: DENY`, `X-Content-Type-Options`, `Referrer-Policy`, and a
+  restrictive `Permissions-Policy` set in `next.config.mjs`.
+
+## Public registration & rate limiting
+
+- The public `/register` form creates a **registration request**, not an
+  account — patients never log in. Submissions are validated server-side and
+  stored via the service role (no anonymous table access); staff review and
+  create the patient record.
+- Abuse-prone public actions use a best-effort rate limiter
+  (`lib/security/rate-limit`). On serverless this is per-instance; back it with a
+  shared store for strict global limits.
 
 ## Files
 

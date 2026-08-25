@@ -1,6 +1,7 @@
 'use server';
 
 import { createAdminClient } from '@/lib/supabase/admin';
+import { clientKey, rateLimit } from '@/lib/security/rate-limit';
 import {
   registrationRequestSchema,
   type RegistrationRequestInput,
@@ -21,6 +22,12 @@ export interface SubmitResult {
 export async function submitRegistrationRequestAction(
   input: RegistrationRequestInput,
 ): Promise<SubmitResult> {
+  // Best-effort abuse guard: max 5 submissions per 10 minutes per IP.
+  const allowed = rateLimit(await clientKey('register'), 5, 10 * 60 * 1000);
+  if (!allowed) {
+    return { ok: false, error: 'Too many requests. Please try again later.' };
+  }
+
   const parsed = registrationRequestSchema.safeParse(input);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
