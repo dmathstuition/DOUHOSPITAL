@@ -15,24 +15,26 @@ import {
   Info,
 } from 'lucide-react';
 import { StatCard } from '@/components/shared/stat-card';
-import { AppointmentsChart } from '@/components/dashboard/appointments-chart';
+import {
+  AppointmentsByDay,
+  StatusBreakdown,
+  DepartmentBreakdown,
+} from '@/components/dashboard/analytics-charts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getCurrentUser } from '@/lib/auth';
-import { getDashboardStats } from '@/lib/data/dashboard';
+import { getDashboardStats, getDashboardAnalytics } from '@/lib/data/dashboard';
 import { can } from '@/lib/rbac';
 
 export const metadata: Metadata = { title: 'Dashboard' };
 
-const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
 export default async function DashboardPage() {
-  const [user, stats] = await Promise.all([getCurrentUser(), getDashboardStats()]);
+  const [user, stats, analytics] = await Promise.all([
+    getCurrentUser(),
+    getDashboardStats(),
+    getDashboardAnalytics(),
+  ]);
   const role = user?.role ?? 'receptionist';
-
-  // Placeholder weekly series until appointment data exists; real aggregation
-  // lands with the appointments module.
-  const chartData = WEEK_DAYS.map((day) => ({ day, count: 0 }));
 
   return (
     <div className="space-y-6">
@@ -67,13 +69,13 @@ export default async function DashboardPage() {
         <StatCard label="Appointments Tomorrow" value={stats.appointmentsTomorrow} icon={CalendarClock} />
         <StatCard label="Waiting Patients" value={stats.waitingPatients} icon={ListOrdered} />
         <StatCard label="Doctors on Duty" value={stats.doctorsOnDuty} icon={Stethoscope} />
-        <StatCard label="Pending Lab Results" value={stats.pendingLabResults} icon={FlaskConical} />
-        <StatCard label="Low Stock Medicines" value={stats.lowStockMedicines} icon={PackageX} />
+        <StatCard label="Pending Lab Results" value={analytics.pendingLabResults} icon={FlaskConical} />
+        <StatCard label="Low Stock Medicines" value={analytics.lowStockMedicines} icon={PackageX} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <AppointmentsChart data={chartData} />
+          <AppointmentsByDay data={analytics.byDay} />
         </div>
 
         <Card>
@@ -95,6 +97,11 @@ export default async function DashboardPage() {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <StatusBreakdown data={analytics.byStatus} />
+        <DepartmentBreakdown data={analytics.byDepartment} />
       </div>
     </div>
   );

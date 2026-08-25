@@ -45,3 +45,18 @@ export function calculateAge(dob: string | Date | null | undefined): number | nu
 export function initials(first?: string | null, last?: string | null): string {
   return `${(first?.[0] ?? '').toUpperCase()}${(last?.[0] ?? '').toUpperCase()}` || '?';
 }
+
+/** Partially mask a phone/email recipient for display in admin lists. */
+export function maskRecipient(value: string | null | undefined): string {
+  if (!value) return '—';
+  if (value.includes('@')) {
+    const [name, domain] = value.split('@');
+    const head = name.slice(0, 2);
+    return `${head}${'*'.repeat(Math.max(1, name.length - 2))}@${domain}`;
+  }
+  // Phone: keep country code + last 3 digits.
+  if (value.length > 6) {
+    return `${value.slice(0, 4)}${'*'.repeat(value.length - 7)}${value.slice(-3)}`;
+  }
+  return value;
+}

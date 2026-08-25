@@ -78,7 +78,7 @@ npm run test       # unit tests
 | 6 | Waiting queue (check-in, live board, stats, workflow) | ✅ Complete |
 | 7 | Clinical modules (consultations, vitals, prescriptions, lab, pharmacy) | ✅ Complete |
 | — | Staff-only pivot: nurse→doctor assignment, doctor worklist, admin worker management, 2-day + 1-day reminders (patient portal removed) | ✅ Complete |
-| 9 | Dashboard analytics, reports, bulk SMS, Excel export, audit viewer, settings | ⏳ Partly (Users ✅) |
+| 9 | Dashboard analytics, reports + Excel export, bulk SMS, audit viewer, notifications monitor, settings, users | ✅ Complete |
 | 10 | Security/perf/a11y hardening & production review | ⏳ Planned |
 
 Phase status is tracked honestly — planned modules render a clear

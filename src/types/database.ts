@@ -247,6 +247,41 @@ export type SystemSettingRow = {
   updated_at: string;
 };
 
+export type SmsCampaignRecipientRow = {
+  id: string;
+  campaign_id: string;
+  patient_id: string | null;
+  phone: string;
+  status: NotificationStatus;
+  provider_message_id: string | null;
+  error_message: string | null;
+  created_at: string;
+};
+
+export type AuditLogRow = {
+  id: string;
+  user_id: string | null;
+  actor_role: UserRole | null;
+  action: string;
+  resource: string | null;
+  resource_id: string | null;
+  ip_address: string | null;
+  metadata: Json;
+  created_at: string;
+};
+
+export type SmsCampaignRow = {
+  id: string;
+  title: string;
+  message: string;
+  filters: Json;
+  recipient_count: number;
+  status: NotificationStatus;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type MedicalAlertRow = Timestamps & {
   id: string;
   patient_id: string;
@@ -299,6 +334,9 @@ export type Database = {
       system_settings: TableShape<SystemSettingRow>;
       medical_alerts: TableShape<MedicalAlertRow>;
       waiting_queue: TableShape<WaitingQueueRow>;
+      audit_logs: TableShape<AuditLogRow>;
+      sms_campaigns: TableShape<SmsCampaignRow>;
+      sms_campaign_recipients: TableShape<SmsCampaignRecipientRow>;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
