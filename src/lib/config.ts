@@ -10,7 +10,12 @@ export const siteConfig = {
   tagline: 'Quality Healthcare for the Dennis Osadebay University Community',
   description:
     'The Dennis Osadebay University Health Center (DOUHC) provides accessible, professional healthcare for students, staff and the wider university community.',
-  url: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+  // `||` (not `??`) so an empty-string env var falls back to a valid URL —
+  // `new URL('')` throws and breaks the build/metadataBase otherwise.
+  url:
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '') ||
+    'http://localhost:3000',
   logo: '/images/douhc-logo.png',
   hero: '/images/health-center-hero.jpg',
   contact: {

@@ -2,8 +2,17 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { siteConfig } from '@/lib/config';
 
+/** Never let a malformed URL break the build/metadata collection. */
+function safeUrl(value: string): URL {
+  try {
+    return new URL(value);
+  } catch {
+    return new URL('http://localhost:3000');
+  }
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+  metadataBase: safeUrl(siteConfig.url),
   title: {
     default: `${siteConfig.name} (${siteConfig.shortName})`,
     template: `%s | ${siteConfig.shortName}`,
