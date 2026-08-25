@@ -51,6 +51,7 @@ create table if not exists public.notification_templates (
   updated_at timestamptz not null default now()
 );
 
+drop trigger if exists trg_templates_updated on public.notification_templates;
 create trigger trg_templates_updated
   before update on public.notification_templates
   for each row execute function public.set_updated_at();
@@ -87,6 +88,7 @@ create table if not exists public.sms_campaigns (
   updated_at      timestamptz not null default now()
 );
 
+drop trigger if exists trg_campaigns_updated on public.sms_campaigns;
 create trigger trg_campaigns_updated
   before update on public.sms_campaigns
   for each row execute function public.set_updated_at();

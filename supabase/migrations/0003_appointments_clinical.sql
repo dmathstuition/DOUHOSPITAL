@@ -36,6 +36,7 @@ create index if not exists idx_appt_status on public.appointments (status);
 create index if not exists idx_appt_reminder
   on public.appointments (appointment_date) where reminder_sent = false;
 
+drop trigger if exists trg_appt_updated on public.appointments;
 create trigger trg_appt_updated
   before update on public.appointments
   for each row execute function public.set_updated_at();
@@ -79,6 +80,7 @@ create table if not exists public.medical_records (
 create index if not exists idx_records_patient on public.medical_records (patient_id, created_at desc);
 create index if not exists idx_records_doctor on public.medical_records (doctor_id);
 
+drop trigger if exists trg_records_updated on public.medical_records;
 create trigger trg_records_updated
   before update on public.medical_records
   for each row execute function public.set_updated_at();
@@ -100,6 +102,7 @@ create table if not exists public.prescriptions (
 create index if not exists idx_presc_patient on public.prescriptions (patient_id, created_at desc);
 create index if not exists idx_presc_status on public.prescriptions (status);
 
+drop trigger if exists trg_presc_updated on public.prescriptions;
 create trigger trg_presc_updated
   before update on public.prescriptions
   for each row execute function public.set_updated_at();
@@ -138,6 +141,7 @@ create index if not exists idx_meds_name on public.medications (lower(name));
 create index if not exists idx_meds_expiry on public.medications (expiry_date);
 create index if not exists idx_meds_lowstock on public.medications (quantity);
 
+drop trigger if exists trg_meds_updated on public.medications;
 create trigger trg_meds_updated
   before update on public.medications
   for each row execute function public.set_updated_at();
@@ -160,6 +164,7 @@ create table if not exists public.laboratory_tests (
 create index if not exists idx_lab_patient on public.laboratory_tests (patient_id, created_at desc);
 create index if not exists idx_lab_status on public.laboratory_tests (status);
 
+drop trigger if exists trg_lab_updated on public.laboratory_tests;
 create trigger trg_lab_updated
   before update on public.laboratory_tests
   for each row execute function public.set_updated_at();
@@ -236,6 +241,7 @@ create table if not exists public.medical_alerts (
 );
 create index if not exists idx_alerts_patient on public.medical_alerts (patient_id);
 
+drop trigger if exists trg_alerts_updated on public.medical_alerts;
 create trigger trg_alerts_updated
   before update on public.medical_alerts
   for each row execute function public.set_updated_at();

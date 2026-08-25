@@ -16,6 +16,7 @@ create table if not exists public.profiles (
   updated_at   timestamptz not null default now()
 );
 
+drop trigger if exists trg_profiles_updated on public.profiles;
 create trigger trg_profiles_updated
   before update on public.profiles
   for each row execute function public.set_updated_at();
@@ -35,6 +36,7 @@ create table if not exists public.departments (
   updated_at    timestamptz not null default now()
 );
 
+drop trigger if exists trg_departments_updated on public.departments;
 create trigger trg_departments_updated
   before update on public.departments
   for each row execute function public.set_updated_at();
@@ -85,6 +87,7 @@ create index if not exists idx_patients_reg_date on public.patients (registratio
 create index if not exists idx_patients_name_search
   on public.patients (lower(first_name), lower(last_name));
 
+drop trigger if exists trg_patients_updated on public.patients;
 create trigger trg_patients_updated
   before update on public.patients
   for each row execute function public.set_updated_at();
@@ -111,6 +114,7 @@ create index if not exists idx_doctors_department on public.doctors (department_
 create index if not exists idx_doctors_status on public.doctors (status);
 create index if not exists idx_doctors_profile on public.doctors (profile_id);
 
+drop trigger if exists trg_doctors_updated on public.doctors;
 create trigger trg_doctors_updated
   before update on public.doctors
   for each row execute function public.set_updated_at();
@@ -135,6 +139,7 @@ create table if not exists public.doctor_schedules (
 create index if not exists idx_schedule_doctor on public.doctor_schedules (doctor_id);
 create index if not exists idx_schedule_day on public.doctor_schedules (day_of_week);
 
+drop trigger if exists trg_schedules_updated on public.doctor_schedules;
 create trigger trg_schedules_updated
   before update on public.doctor_schedules
   for each row execute function public.set_updated_at();

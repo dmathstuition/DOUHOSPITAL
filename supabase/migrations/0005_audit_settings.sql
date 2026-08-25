@@ -55,6 +55,7 @@ create table if not exists public.system_settings (
   updated_at timestamptz not null default now()
 );
 
+drop trigger if exists trg_settings_updated on public.system_settings;
 create trigger trg_settings_updated
   before update on public.system_settings
   for each row execute function public.set_updated_at();
