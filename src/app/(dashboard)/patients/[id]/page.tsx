@@ -25,7 +25,8 @@ import {
 import { getPatientRecords } from '@/lib/data/clinical';
 import { PatientClinicalActions } from '@/components/clinical/patient-clinical-actions';
 import { getCurrentUser } from '@/lib/auth';
-import { can } from '@/lib/rbac';
+import { can, ROLES } from '@/lib/rbac';
+import { PatientActions } from '@/components/patients/patient-actions';
 import { calculateAge, formatDate, formatTime, initials } from '@/lib/utils';
 import { formatNigerianPhone } from '@/lib/utils/phone';
 import type { AppointmentStatus } from '@/types/database';
@@ -79,12 +80,17 @@ export default async function PatientProfilePage({
             {patient.sex ? ` · ${patient.sex}` : ''}
           </p>
         </div>
-        <Badge
-          variant={patient.status === 'active' ? 'success' : 'secondary'}
-          className="ml-auto"
-        >
-          {patient.status}
-        </Badge>
+        <div className="ml-auto flex items-center gap-3">
+          <Badge variant={patient.status === 'active' ? 'success' : 'secondary'}>
+            {patient.status}
+          </Badge>
+          <PatientActions
+            patientId={patient.id}
+            patientName={`${patient.first_name} ${patient.last_name}`}
+            canEdit={can(user?.role, 'REGISTER_PATIENT')}
+            canDelete={user?.role === ROLES.SUPER_ADMIN}
+          />
+        </div>
       </div>
 
       {/* Clinical quick-actions (role-gated) */}

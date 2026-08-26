@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus, Pencil, Power, Loader2, CalendarClock, Stethoscope } from 'lucide-react';
+import { Plus, Pencil, Power, Loader2, CalendarClock, Stethoscope, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,7 +16,11 @@ import { Dialog } from '@/components/ui/dialog';
 import { EmptyState } from '@/components/shared/empty-state';
 import { initials } from '@/lib/utils';
 import { doctorSchema, type DoctorInput } from '@/lib/validation/doctor';
-import { saveDoctorAction, setDoctorStatusAction } from '@/app/(dashboard)/dashboard/doctors/actions';
+import {
+  saveDoctorAction,
+  setDoctorStatusAction,
+  deleteDoctorAction,
+} from '@/app/(dashboard)/dashboard/doctors/actions';
 import type { DoctorWithDept } from '@/lib/data/admin';
 
 interface DeptOption {
@@ -34,13 +38,29 @@ export function DoctorManager({
   const router = useRouter();
   const [editing, setEditing] = useState<DoctorWithDept | null>(null);
   const [creating, setCreating] = useState(false);
+  const [deleting, setDeleting] = useState<DoctorWithDept | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   async function toggleStatus(d: DoctorWithDept) {
     setPendingId(d.id);
     await setDoctorStatusAction(d.id, d.status === 'active' ? 'inactive' : 'active');
     setPendingId(null);
     router.refresh();
+  }
+
+  async function confirmDelete() {
+    if (!deleting) return;
+    setPendingId(deleting.id);
+    setDeleteError(null);
+    const res = await deleteDoctorAction(deleting.id);
+    setPendingId(null);
+    if (res.ok) {
+      setDeleting(null);
+      router.refresh();
+    } else {
+      setDeleteError(res.error ?? 'Unable to delete.');
+    }
   }
 
   return (
@@ -94,10 +114,48 @@ export function DoctorManager({
                   {pendingId === d.id ? <Loader2 className="animate-spin" /> : <Power />}
                   {d.status === 'active' ? 'Deactivate' : 'Activate'}
                 </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => {
+                    setDeleteError(null);
+                    setDeleting(d);
+                  }}
+                >
+                  <Trash2 /> Delete
+                </Button>
               </div>
             </Card>
           ))}
         </div>
+      )}
+
+      {deleting && (
+        <Dialog
+          open
+          onClose={() => setDeleting(null)}
+          title="Delete doctor?"
+          description={`Permanently remove Dr ${deleting.full_name} and their schedule. If they have appointments, deletion is blocked — deactivate instead.`}
+        >
+          {deleteError && (
+            <p className="mb-3 rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {deleteError}
+            </p>
+          )}
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setDeleting(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={pendingId === deleting.id}
+            >
+              {pendingId === deleting.id && <Loader2 className="animate-spin" />} Delete doctor
+            </Button>
+          </div>
+        </Dialog>
       )}
 
       {(creating || editing) && (

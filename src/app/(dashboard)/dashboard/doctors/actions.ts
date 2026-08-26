@@ -87,6 +87,33 @@ export async function setDoctorStatusAction(
   return { ok: true, id };
 }
 
+/**
+ * Delete a doctor (admin only). Removes the doctor and their schedules. If the
+ * doctor is already referenced by appointments (FK restrict), deletion is
+ * blocked — the caller is told to deactivate instead so history is preserved.
+ */
+export async function deleteDoctorAction(id: string): Promise<ActionResult> {
+  const { error: authError } = await authorize();
+  if (authError) return { ok: false, error: authError };
+
+  const supabase = await createClient();
+  const { error } = await supabase.from('doctors').delete().eq('id', id);
+  if (error) {
+    if (error.code === '23503') {
+      return {
+        ok: false,
+        error:
+          'This doctor has appointments and can’t be deleted. Deactivate them instead to keep the records.',
+      };
+    }
+    return { ok: false, error: 'Unable to delete the doctor.' };
+  }
+
+  revalidatePath('/dashboard/doctors');
+  revalidatePath('/doctors');
+  return { ok: true, id };
+}
+
 export async function addScheduleAction(
   doctorId: string,
   input: ScheduleInput,

@@ -6,27 +6,58 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { patientSchema, type PatientInput, bloodGroups, genotypes } from '@/lib/validation/patient';
-import { createPatientAction } from '@/app/(dashboard)/patients/actions';
+import { createPatientAction, updatePatientAction } from '@/app/(dashboard)/patients/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { PatientRow } from '@/types/database';
 
-export function PatientForm() {
+/** Build react-hook-form defaults from an existing patient (edit mode). */
+function toDefaults(p?: PatientRow): Partial<PatientInput> | undefined {
+  if (!p) return undefined;
+  return {
+    first_name: p.first_name,
+    last_name: p.last_name,
+    middle_name: p.middle_name ?? '',
+    sex: p.sex ?? undefined,
+    date_of_birth: p.date_of_birth ?? '',
+    blood_group: (p.blood_group as PatientInput['blood_group']) ?? undefined,
+    genotype: (p.genotype as PatientInput['genotype']) ?? undefined,
+    email: p.email ?? '',
+    phone: p.phone ?? '',
+    matric_number: p.matric_number ?? '',
+    student_id: p.student_id ?? '',
+    faculty: p.faculty ?? '',
+    department: p.department ?? '',
+    level: p.level ?? '',
+    address: p.address ?? '',
+    emergency_contact_name: p.emergency_contact_name ?? '',
+    emergency_contact_phone: p.emergency_contact_phone ?? '',
+  };
+}
+
+export function PatientForm({ patient }: { patient?: PatientRow }) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
+  const isEdit = !!patient;
 
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<PatientInput>({ resolver: zodResolver(patientSchema) });
+  } = useForm<PatientInput>({
+    resolver: zodResolver(patientSchema),
+    defaultValues: toDefaults(patient),
+  });
 
   async function onSubmit(values: PatientInput) {
     setServerError(null);
-    const res = await createPatientAction(values);
+    const res = isEdit
+      ? await updatePatientAction(patient!.id, values)
+      : await createPatientAction(values);
     if (res.ok && res.id) {
       router.push(`/patients/${res.id}`);
       router.refresh();
@@ -37,7 +68,7 @@ export function PatientForm() {
         setError(k as keyof PatientInput, { message: v });
       }
     }
-    setServerError(res.error ?? 'Unable to register the patient.');
+    setServerError(res.error ?? 'Unable to save the patient.');
   }
 
   return (
@@ -143,7 +174,7 @@ export function PatientForm() {
         </Button>
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting && <Loader2 className="animate-spin" />}
-          Register Patient
+          {isEdit ? 'Save changes' : 'Register Patient'}
         </Button>
       </div>
     </form>
