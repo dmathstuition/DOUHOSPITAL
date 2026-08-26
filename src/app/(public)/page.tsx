@@ -141,24 +141,38 @@ export default async function HomePage() {
               description="Duty rosters are managed by the health center administration and will appear here automatically once schedules are configured."
             />
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {doctors.map((d) => (
-                <Card key={d.id}>
-                  <CardContent className="flex items-center gap-4 p-5">
-                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-secondary text-lg font-semibold text-primary">
+                <div
+                  key={d.id}
+                  className="group relative overflow-hidden rounded-2xl border bg-card p-6 text-center shadow-soft transition-all hover:-translate-y-1 hover:shadow-glow"
+                >
+                  <div className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-gradient-to-b from-secondary to-transparent opacity-70" />
+                  <div className="relative flex justify-center">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-primary" /> On duty today
+                    </span>
+                  </div>
+                  <div className="relative mt-4 flex justify-center">
+                    <span className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-2xl font-semibold text-primary-foreground ring-4 ring-primary/30">
                       {initials(d.full_name.split(' ')[0], d.full_name.split(' ')[1])}
                     </span>
-                    <div className="min-w-0">
-                      <p className="truncate font-semibold">Dr {d.full_name}</p>
-                      <p className="truncate text-sm text-muted-foreground">
-                        {d.specialization ?? 'General Practice'}
+                  </div>
+                  <p className="mt-4 truncate text-lg font-semibold">Dr {d.full_name}</p>
+                  <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                    {d.specialization ?? 'General Practice'}
+                  </span>
+                  <div className="mt-4 space-y-1.5 text-sm text-muted-foreground">
+                    {d.department && (
+                      <p className="flex items-center justify-center gap-1.5">
+                        <Building2 className="h-3.5 w-3.5" /> {d.department}
                       </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {d.department} · {formatTime(d.start_time)}–{formatTime(d.end_time)}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
+                    )}
+                    <p className="flex items-center justify-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5" /> {formatTime(d.start_time)} – {formatTime(d.end_time)}
+                    </p>
+                  </div>
+                </div>
               ))}
             </div>
           )}

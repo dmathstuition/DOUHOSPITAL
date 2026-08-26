@@ -1,11 +1,11 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { siteConfig } from '@/lib/config';
 
 /**
- * DOUHC logo lockup. Uses a text-based mark that renders even before the real
- * logo asset (public/images/douhc-logo.png) is supplied, so the brand is never
- * broken. Swap in the image by uncommenting the <Image /> block once available.
+ * DOUHC logo lockup — the Dennis Osadebay University crest plus the health
+ * center wordmark.
  */
 export function Logo({
   className,
@@ -16,11 +16,15 @@ export function Logo({
 }) {
   return (
     <Link href="/" className={cn('flex items-center gap-3', className)}>
-      <span
-        aria-hidden
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-bold tracking-tight text-primary-foreground"
-      >
-        DH
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white shadow-soft ring-1 ring-black/5">
+        <Image
+          src="/images/university-logo.jpg"
+          alt="Dennis Osadebay University crest"
+          width={40}
+          height={40}
+          className="h-full w-full object-contain p-0.5"
+          priority
+        />
       </span>
       {withText && (
         <span className="flex flex-col leading-tight">
