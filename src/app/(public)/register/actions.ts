@@ -62,9 +62,34 @@ export async function submitRegistrationRequestAction(
       note: v.note || null,
       status: 'pending',
     });
-    if (error) return { ok: false, error: 'Unable to submit your request. Please try again.' };
+    if (error) {
+      // Log the real cause to the server (visible in Vercel → Functions logs).
+      console.error('[register] insert failed', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      });
+      // Return a safe, code-aware message so the cause is diagnosable.
+      if (error.code === '42P01') {
+        // undefined_table — schema not applied (or wrong Supabase project).
+        return {
+          ok: false,
+          error:
+            'Registration is not set up on the server yet. Please contact the health center administration.',
+        };
+      }
+      if (error.code === '23505') {
+        return { ok: false, error: 'It looks like this request was already submitted.' };
+      }
+      if (error.code === '23514') {
+        return { ok: false, error: 'Some of the details entered are invalid. Please check and try again.' };
+      }
+      return { ok: false, error: 'Unable to submit your request. Please try again.' };
+    }
     return { ok: true };
-  } catch {
+  } catch (err) {
+    console.error('[register] admin client / unexpected error', err);
     return {
       ok: false,
       error: 'Registration is temporarily unavailable. Please visit the health center to register.',
