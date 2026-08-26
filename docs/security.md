@@ -35,15 +35,16 @@ Never exposed to client JavaScript:
   `X-Frame-Options: DENY`, `X-Content-Type-Options`, `Referrer-Policy`, and a
   restrictive `Permissions-Policy` set in `next.config.mjs`.
 
-## Public registration & rate limiting
+## Patient registration (staff-only)
 
-- The public `/register` form creates a **registration request**, not an
-  account — patients never log in. Submissions are validated server-side and
-  stored via the service role (no anonymous table access); staff review and
-  create the patient record.
-- Abuse-prone public actions use a best-effort rate limiter
-  (`lib/security/rate-limit`). On serverless this is per-instance; back it with a
-  shared store for strict global limits.
+- Patients have **no public form and no login**. Patient details are filled in
+  by staff — any worker (nurse, doctor, receptionist) or the admin — via the
+  in-app "Register Patient" form. Enforced by the `REGISTER_PATIENT` capability
+  server-side and the `patients_staff_insert` RLS policy (`is_staff()`).
+- Deleting a patient is admin-only and is a soft delete (record hidden, history
+  preserved). Editing is open to all staff.
+- The best-effort rate limiter (`lib/security/rate-limit`) remains available for
+  any future public endpoint; back it with a shared store for strict limits.
 
 ## Files
 

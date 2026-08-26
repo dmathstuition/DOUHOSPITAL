@@ -16,7 +16,6 @@ export const dashboardNav: NavItem[] = [
   { title: 'Dashboard', href: '/dashboard', icon: 'LayoutDashboard', roles: [ROLES.SUPER_ADMIN, ROLES.DOCTOR, ROLES.NURSE, ROLES.RECEPTIONIST] },
   { title: 'My Patients', href: '/dashboard/my-patients', icon: 'ClipboardList', roles: [ROLES.SUPER_ADMIN, ROLES.DOCTOR] },
   { title: 'Patients', href: '/patients', icon: 'Users', roles: [ROLES.SUPER_ADMIN, ROLES.DOCTOR, ROLES.NURSE, ROLES.RECEPTIONIST] },
-  { title: 'Registrations', href: '/dashboard/registrations', icon: 'Inbox', roles: [ROLES.SUPER_ADMIN, ROLES.NURSE, ROLES.RECEPTIONIST] },
   { title: 'Appointments', href: '/dashboard/appointments', icon: 'CalendarDays', roles: [ROLES.SUPER_ADMIN, ROLES.DOCTOR, ROLES.NURSE, ROLES.RECEPTIONIST] },
   { title: 'Waiting Queue', href: '/dashboard/queue', icon: 'ListOrdered', roles: [ROLES.SUPER_ADMIN, ROLES.NURSE, ROLES.RECEPTIONIST] },
   { title: 'Doctors', href: '/dashboard/doctors', icon: 'Stethoscope', roles: [ROLES.SUPER_ADMIN] },
