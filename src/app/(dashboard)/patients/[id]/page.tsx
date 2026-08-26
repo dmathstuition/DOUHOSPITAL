@@ -50,7 +50,7 @@ export default async function PatientProfilePage({
     getPatientRecords(id),
   ]);
 
-  const age = calculateAge(patient.date_of_birth);
+  const age = patient.age ?? calculateAge(patient.date_of_birth);
   const canVitals = can(user?.role, 'RECORD_VITALS');
   const canConsult = can(user?.role, 'CREATE_CONSULTATION');
   const canViewNotes = can(user?.role, 'VIEW_CLINICAL_NOTES');
@@ -136,6 +136,12 @@ export default async function PatientProfilePage({
             <Row label="Department" value={patient.department} />
             <Row label="Level" value={patient.level} />
             <Row label="Registered" value={formatDate(patient.registration_date)} />
+            {patient.notes && (
+              <div className="border-t pt-3">
+                <p className="font-medium">Doctor notes</p>
+                <p className="whitespace-pre-wrap text-muted-foreground">{patient.notes}</p>
+              </div>
+            )}
             <div className="border-t pt-3">
               <p className="font-medium">Emergency contact</p>
               <p className="text-muted-foreground">
@@ -167,6 +173,8 @@ export default async function PatientProfilePage({
                         <th className="py-2 pr-4 font-medium">Date</th>
                         <th className="py-2 pr-4 font-medium">BP</th>
                         <th className="py-2 pr-4 font-medium">Temp</th>
+                        <th className="py-2 pr-4 font-medium">Weight</th>
+                        <th className="py-2 pr-4 font-medium">Height</th>
                         <th className="py-2 pr-4 font-medium">Pulse</th>
                         <th className="py-2 pr-4 font-medium">SpO₂</th>
                         <th className="py-2 pr-4 font-medium">BMI</th>
@@ -178,6 +186,8 @@ export default async function PatientProfilePage({
                           <td className="py-2 pr-4">{formatDate(v.recorded_at)}</td>
                           <td className="py-2 pr-4">{v.blood_pressure ?? '—'}</td>
                           <td className="py-2 pr-4">{v.temperature ?? '—'}</td>
+                          <td className="py-2 pr-4">{v.weight ?? '—'}</td>
+                          <td className="py-2 pr-4">{v.height ?? '—'}</td>
                           <td className="py-2 pr-4">{v.pulse ?? '—'}</td>
                           <td className="py-2 pr-4">{v.oxygen_saturation ?? '—'}</td>
                           <td className="py-2 pr-4">{v.bmi ?? '—'}</td>

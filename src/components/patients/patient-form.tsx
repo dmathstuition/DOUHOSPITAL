@@ -9,6 +9,7 @@ import { patientSchema, type PatientInput, bloodGroups, genotypes } from '@/lib/
 import { createPatientAction, updatePatientAction } from '@/app/(dashboard)/patients/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +23,7 @@ function toDefaults(p?: PatientRow): Partial<PatientInput> | undefined {
     last_name: p.last_name,
     middle_name: p.middle_name ?? '',
     sex: p.sex ?? undefined,
+    age: p.age ?? undefined,
     date_of_birth: p.date_of_birth ?? '',
     blood_group: (p.blood_group as PatientInput['blood_group']) ?? undefined,
     genotype: (p.genotype as PatientInput['genotype']) ?? undefined,
@@ -35,6 +37,7 @@ function toDefaults(p?: PatientRow): Partial<PatientInput> | undefined {
     address: p.address ?? '',
     emergency_contact_name: p.emergency_contact_name ?? '',
     emergency_contact_phone: p.emergency_contact_phone ?? '',
+    doctor_notes: p.notes ?? '',
   };
 }
 
@@ -93,6 +96,9 @@ export function PatientForm({ patient }: { patient?: PatientRow }) {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </Select>
+          </Field>
+          <Field label="Age" error={errors.age?.message}>
+            <Input type="number" inputMode="numeric" min={0} max={150} placeholder="e.g. 21" {...register('age')} />
           </Field>
           <Field label="Date of birth" error={errors.date_of_birth?.message}>
             <Input type="date" {...register('date_of_birth')} />
@@ -159,6 +165,39 @@ export function PatientForm({ patient }: { patient?: PatientRow }) {
           <Field label="Contact phone" error={errors.emergency_contact_phone?.message}>
             <Input inputMode="tel" placeholder="08012345678" {...register('emergency_contact_phone')} />
           </Field>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Vital signs &amp; doctor notes</CardTitle>
+          {isEdit && (
+            <p className="text-sm text-muted-foreground">
+              Enter values to record a new reading. Leave blank to keep existing history.
+            </p>
+          )}
+        </CardHeader>
+        <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Field label="Blood pressure" error={errors.blood_pressure?.message}>
+            <Input placeholder="e.g. 120/80" {...register('blood_pressure')} />
+          </Field>
+          <Field label="Temperature (°C)" error={errors.temperature?.message}>
+            <Input type="number" inputMode="decimal" step="0.1" placeholder="e.g. 36.8" {...register('temperature')} />
+          </Field>
+          <Field label="Pulse (bpm)" error={errors.pulse?.message}>
+            <Input type="number" inputMode="numeric" placeholder="e.g. 72" {...register('pulse')} />
+          </Field>
+          <Field label="Weight (kg)" error={errors.weight?.message}>
+            <Input type="number" inputMode="decimal" step="0.1" placeholder="e.g. 68" {...register('weight')} />
+          </Field>
+          <Field label="Height (cm)" error={errors.height?.message}>
+            <Input type="number" inputMode="decimal" step="0.1" placeholder="e.g. 172" {...register('height')} />
+          </Field>
+          <div className="sm:col-span-2 lg:col-span-3">
+            <Field label="Doctor notes" error={errors.doctor_notes?.message}>
+              <Textarea placeholder="Observations, complaints, instructions…" {...register('doctor_notes')} />
+            </Field>
+          </div>
         </CardContent>
       </Card>
 

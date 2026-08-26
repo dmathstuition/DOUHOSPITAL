@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { EmptyState } from '@/components/shared/empty-state';
 import { PatientSearch } from '@/components/patients/patient-search';
+import { PatientExportButton } from '@/components/patients/patient-export-button';
 import { searchPatients } from '@/lib/data/patients';
 import { getCurrentUser } from '@/lib/auth';
 import { can } from '@/lib/rbac';
@@ -28,6 +29,7 @@ export default async function PatientsPage({
 
   const totalPages = Math.max(1, Math.ceil(result.count / result.pageSize));
   const canRegister = can(user?.role, 'REGISTER_PATIENT');
+  const canExport = can(user?.role, 'EXPORT_REPORTS');
 
   return (
     <div className="space-y-6">
@@ -38,13 +40,16 @@ export default async function PatientsPage({
             {result.count} record{result.count === 1 ? '' : 's'}
           </p>
         </div>
-        {canRegister && (
-          <Button asChild>
-            <Link href="/patients/new">
-              <UserPlus /> Register Patient
-            </Link>
-          </Button>
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          {canExport && <PatientExportButton />}
+          {canRegister && (
+            <Button asChild>
+              <Link href="/patients/new">
+                <UserPlus /> Register Patient
+              </Link>
+            </Button>
+          )}
+        </div>
       </div>
 
       <PatientSearch />

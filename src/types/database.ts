@@ -67,6 +67,7 @@ export type PatientRow = Timestamps & {
   middle_name: string | null;
   sex: 'male' | 'female' | null;
   date_of_birth: string | null;
+  age: number | null;
   blood_group: string | null;
   genotype: string | null;
   email: string | null;
@@ -79,6 +80,7 @@ export type PatientRow = Timestamps & {
   address: string | null;
   emergency_contact_name: string | null;
   emergency_contact_phone: string | null;
+  notes: string | null;
   registration_date: string;
   status: 'active' | 'inactive';
   deleted_at: string | null;
