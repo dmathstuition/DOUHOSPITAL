@@ -49,7 +49,7 @@ export function MedicationManager({ medications }: { medications: MedicationRow[
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">Medication Inventory</h2>
         <Button onClick={() => setCreating(true)}>
           <Plus /> Add Medication

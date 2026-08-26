@@ -36,7 +36,7 @@ export function DepartmentManager({ departments }: { departments: DepartmentRow[
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Departments</h1>
           <p className="text-muted-foreground">{departments.length} total</p>
@@ -70,7 +70,7 @@ export function DepartmentManager({ departments }: { departments: DepartmentRow[
                   </p>
                 )}
               </div>
-              <div className="flex gap-2">
+              <div className="flex w-full flex-wrap gap-2 sm:w-auto">
                 <Button variant="outline" size="sm" onClick={() => setEditing(d)}>
                   <Pencil /> Edit
                 </Button>

@@ -81,7 +81,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main id="main-content" className="animate-fade-in p-4 sm:p-6 lg:p-8">{children}</main>
+        <main id="main-content" className="animate-fade-in overflow-x-hidden p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

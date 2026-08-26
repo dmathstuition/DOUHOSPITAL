@@ -88,7 +88,7 @@ export function QueueBoard({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">Today&apos;s Queue</h2>
         <Button onClick={() => setCheckInOpen(true)}>
           <UserPlus /> Check In Patient
