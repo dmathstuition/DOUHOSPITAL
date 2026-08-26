@@ -39,16 +39,20 @@ export default async function HomePage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden border-b bg-gradient-to-br from-secondary via-background to-background">
-        <div className="container grid items-center gap-10 py-16 lg:grid-cols-2 lg:py-24">
-          <div>
-            <Badge variant="secondary" className="mb-4">
-              University Health Center
+        {/* decorative brand glow */}
+        <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 left-1/3 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
+        <div className="container relative grid items-center gap-10 py-16 lg:grid-cols-2 lg:py-24">
+          <div className="animate-fade-up">
+            <Badge variant="secondary" className="mb-4 shadow-soft">
+              🏥 University Health Center
             </Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              {siteConfig.name}
+            <h1 className="text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+              Quality healthcare for the{' '}
+              <span className="text-gradient">university community</span>
             </h1>
-            <p className="mt-4 max-w-xl text-lg text-muted-foreground">
-              {siteConfig.tagline}
+            <p className="mt-5 max-w-xl text-lg text-muted-foreground">
+              {siteConfig.name} — {siteConfig.tagline}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">

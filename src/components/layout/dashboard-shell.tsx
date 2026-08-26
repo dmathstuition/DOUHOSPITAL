@@ -23,7 +23,7 @@ export function DashboardShell({
   const displayName = user.fullName ?? user.email ?? 'User';
 
   return (
-    <div className="min-h-screen bg-muted/20">
+    <div className="min-h-screen bg-brand-soft bg-muted/20">
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r bg-background lg:block">
         <DashboardSidebar items={items} />
@@ -54,7 +54,7 @@ export function DashboardShell({
 
       <div className={cn('lg:pl-64')}>
         {/* Topbar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur">
+        <header className="glass sticky top-0 z-30 flex h-16 items-center gap-3 border-b px-4">
           <button
             className="rounded-md p-2 hover:bg-accent lg:hidden"
             aria-label="Open menu"
@@ -81,7 +81,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main id="main-content" className="p-4 sm:p-6 lg:p-8">{children}</main>
+        <main id="main-content" className="animate-fade-in p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

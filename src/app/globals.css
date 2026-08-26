@@ -90,9 +90,33 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Distinctive display font + tighter tracking for all headings. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+    letter-spacing: -0.02em;
   }
   /* Accessible focus ring on all interactive elements */
   :focus-visible {
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer utilities {
+  /* Subtle gradient text for hero/marketing accents. */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      120deg,
+      hsl(var(--primary)),
+      hsl(150 55% 40%)
+    );
+  }
+  /* Frosted surface used on sticky bars. */
+  .glass {
+    background-color: hsl(var(--background) / 0.72);
+    backdrop-filter: saturate(1.4) blur(10px);
   }
 }
