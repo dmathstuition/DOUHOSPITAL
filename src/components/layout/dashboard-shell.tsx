@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { Menu, X, LogOut } from 'lucide-react';
 import { DashboardSidebar } from '@/components/layout/dashboard-sidebar';
+import { DashboardRail } from '@/components/layout/dashboard-rail';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ROLE_LABELS, type Role } from '@/lib/rbac';
-import type { NavItem } from '@/lib/nav';
+import { railForRole, type NavItem } from '@/lib/nav';
 import { initials } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
@@ -21,11 +22,15 @@ export function DashboardShell({
 }) {
   const [open, setOpen] = useState(false);
   const displayName = user.fullName ?? user.email ?? 'User';
+  const railItems = railForRole(user.role);
 
   return (
     <div className="min-h-screen bg-brand-soft bg-muted/20">
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r bg-background lg:block">
+      {/* Desktop two-tier sidebar: brand icon rail + labelled panel */}
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-16 lg:block">
+        <DashboardRail items={railItems} />
+      </aside>
+      <aside className="fixed inset-y-0 left-16 z-20 hidden w-60 border-r bg-background lg:block">
         <DashboardSidebar items={items} />
       </aside>
 
@@ -52,7 +57,7 @@ export function DashboardShell({
         </div>
       )}
 
-      <div className={cn('lg:pl-64')}>
+      <div className={cn('lg:pl-[304px]')}>
         {/* Topbar */}
         <header className="glass sticky top-0 z-30 flex h-16 items-center gap-3 border-b px-4">
           <button

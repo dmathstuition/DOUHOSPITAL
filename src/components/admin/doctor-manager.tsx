@@ -2,19 +2,19 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus, Pencil, Power, Loader2, CalendarClock, Stethoscope, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Power, Loader2, CalendarClock, Stethoscope, Trash2, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
 import { Dialog } from '@/components/ui/dialog';
 import { EmptyState } from '@/components/shared/empty-state';
-import { initials } from '@/lib/utils';
+import { cn, initials } from '@/lib/utils';
 import { doctorSchema, type DoctorInput } from '@/lib/validation/doctor';
 import {
   saveDoctorAction,
@@ -78,56 +78,82 @@ export function DoctorManager({
       {doctors.length === 0 ? (
         <EmptyState icon={Stethoscope} title="No doctors yet" />
       ) : (
-        <div className="grid gap-3">
-          {doctors.map((d) => (
-            <Card key={d.id} className="flex flex-wrap items-center gap-3 p-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-primary">
-                {initials(d.full_name.split(' ')[0], d.full_name.split(' ')[1])}
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <p className="font-medium">Dr {d.full_name}</p>
-                  <Badge variant={d.status === 'active' ? 'success' : 'secondary'}>
-                    {d.status}
-                  </Badge>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {doctors.map((d) => {
+            const isActive = d.status === 'active';
+            return (
+              <div
+                key={d.id}
+                className="group relative overflow-hidden rounded-2xl border bg-card p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-card"
+              >
+                <div className="pointer-events-none absolute inset-x-0 -top-14 h-28 bg-gradient-to-b from-secondary to-transparent opacity-70" />
+                <div className="relative flex items-start justify-between gap-3">
+                  <span
+                    className={cn(
+                      'flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-gradient text-lg font-semibold text-primary-foreground ring-4',
+                      isActive ? 'ring-primary/30' : 'ring-border grayscale',
+                    )}
+                  >
+                    {d.photo_url ? (
+                      <Image
+                        src={d.photo_url}
+                        alt={`Dr ${d.full_name}`}
+                        width={64}
+                        height={64}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      initials(d.full_name.split(' ')[0], d.full_name.split(' ')[1])
+                    )}
+                  </span>
+                  <Badge variant={isActive ? 'success' : 'secondary'}>{d.status}</Badge>
                 </div>
-                <p className="truncate text-sm text-muted-foreground">
-                  {d.specialization ?? 'General Practice'}
-                  {d.department_name ? ` · ${d.department_name}` : ''}
-                </p>
+
+                <p className="relative mt-3 truncate font-semibold">Dr {d.full_name}</p>
+                {d.specialization && (
+                  <span className="mt-1.5 inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary">
+                    {d.specialization}
+                  </span>
+                )}
+                {d.department_name && (
+                  <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+                    <Building2 className="h-3.5 w-3.5" /> {d.department_name}
+                  </p>
+                )}
+
+                <div className="mt-4 flex flex-wrap gap-2 border-t pt-4">
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={`/dashboard/doctors/${d.id}`}>
+                      <CalendarClock /> Schedule
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => setEditing(d)}>
+                    <Pencil /> Edit
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleStatus(d)}
+                    disabled={pendingId === d.id}
+                  >
+                    {pendingId === d.id ? <Loader2 className="animate-spin" /> : <Power />}
+                    {isActive ? 'Deactivate' : 'Activate'}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => {
+                      setDeleteError(null);
+                      setDeleting(d);
+                    }}
+                  >
+                    <Trash2 /> Delete
+                  </Button>
+                </div>
               </div>
-              <div className="flex w-full flex-wrap gap-2 sm:w-auto">
-                <Button asChild variant="outline" size="sm">
-                  <Link href={`/dashboard/doctors/${d.id}`}>
-                    <CalendarClock /> Schedule
-                  </Link>
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => setEditing(d)}>
-                  <Pencil /> Edit
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => toggleStatus(d)}
-                  disabled={pendingId === d.id}
-                >
-                  {pendingId === d.id ? <Loader2 className="animate-spin" /> : <Power />}
-                  {d.status === 'active' ? 'Deactivate' : 'Activate'}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-destructive hover:text-destructive"
-                  onClick={() => {
-                    setDeleteError(null);
-                    setDeleting(d);
-                  }}
-                >
-                  <Trash2 /> Delete
-                </Button>
-              </div>
-            </Card>
-          ))}
+            );
+          })}
         </div>
       )}
 
