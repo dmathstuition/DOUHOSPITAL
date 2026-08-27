@@ -38,13 +38,20 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">
-          Welcome{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''}
-        </h1>
-        <p className="text-muted-foreground">
-          Here&apos;s an overview of the health center today.
-        </p>
+      <div className="relative overflow-hidden rounded-2xl bg-brand-gradient p-6 text-primary-foreground shadow-glow sm:p-8">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-16 right-1/3 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
+        <div className="relative">
+          <p className="text-sm font-medium text-primary-foreground/80">
+            {new Date().toLocaleDateString('en-NG', { weekday: 'long', day: 'numeric', month: 'long' })}
+          </p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight sm:text-3xl">
+            Welcome{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''} 👋
+          </h1>
+          <p className="mt-1 text-primary-foreground/80">
+            Here&apos;s an overview of the health center today.
+          </p>
+        </div>
       </div>
 
       {!stats.configured && (

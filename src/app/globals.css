@@ -119,4 +119,13 @@
     background-color: hsl(var(--background) / 0.72);
     backdrop-filter: saturate(1.4) blur(10px);
   }
+  /* Faint brand dot grid used behind dashboard content. */
+  .bg-dot-grid {
+    background-image: radial-gradient(
+      hsl(var(--primary) / 0.06) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+    background-position: -1px -1px;
+  }
 }
